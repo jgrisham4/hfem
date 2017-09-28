@@ -17,7 +17,8 @@ executable hfem
   hs-source-dirs   : src
   main-is          : Main.hs
   default-language : Haskell2010
-  build-depends    : base >= 4.7 && < 5,tasty,tasty-ant-xml
+  build-depends    : base >= 4.7 && < 5
+  other-modules    : Basis
 
 library
   hs-source-dirs   : src
@@ -30,4 +31,5 @@ test-suite unit-tests
   hs-source-dirs   : test,src
   main-is          : basisTests.hs
   default-language : Haskell2010
-  build-depends    : base,tasty,tasty-ant-xml,tasty-hunit
+  build-depends    : base,tasty,tasty-hunit,tasty-jenkins-xml
+  other-modules    : Basis
