@@ -1,0 +1,33 @@
+name               : hfem
+version            : 0.1
+synopsis           : A Haskell finite element code.
+description        : HFEM is a generic FEM code written in Haskell.
+homepage           : https://github.com/jgrisham4/hfem#readme
+license            : BSD3
+license-file       : LICENSE
+author             : James Grisham
+maintainer         : jgrisham4@gmail.com
+copyright          : James Grisham
+category           : Scientific
+build-type         : Simple
+cabal-version      : >=1.10
+extra-source-files : README.md
+
+executable hfem
+  hs-source-dirs   : src
+  main-is          : Main.hs
+  default-language : Haskell2010
+  build-depends    : base >= 4.7 && < 5,tasty,tasty-ant-xml
+
+library
+  hs-source-dirs   : src
+  exposed-modules  : Basis
+  build-depends    : base >= 4.7 && < 5
+  default-language : Haskell2010
+
+test-suite unit-tests
+  type             : exitcode-stdio-1.0
+  hs-source-dirs   : test,src
+  main-is          : basisTests.hs
+  default-language : Haskell2010
+  build-depends    : base,tasty,tasty-ant-xml,tasty-hunit

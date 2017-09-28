@@ -1,0 +1,486 @@
+
+==================== FINAL INTERFACE ====================
+2017-09-26 04:01:48.217560374 UTC
+
+interface main@main:Basis 8002
+  interface hash: 26a858f7f94963c9e97be9b8ec7a358c
+  ABI hash: f92cb505da7bec8b06ad451b46270ffc
+  export-list hash: 229dcf197bda5e35937cf7ef370c9155
+  orphan hash: 693e9af84d3dfcc71e640e005bdc5e2e
+  flag hash: 215cf50fc52a5efe9c0a707eaeac612c
+  sig of: Nothing
+  used TH splices: False
+  where
+exports:
+  Basis.BasisType|{Basis.dpsidxi Basis.order Basis.psi}
+  Basis.Lagrange{Basis.Lagrange}
+  Basis.Legendre{Basis.Legendre}
+module dependencies:
+package dependencies: base-4.9.1.0* ghc-prim-0.5.0.0
+                      integer-gmp-1.0.0.1
+orphans: base-4.9.1.0:GHC.Base base-4.9.1.0:GHC.Float
+family instance modules: base-4.9.1.0:Control.Applicative
+                         base-4.9.1.0:Data.Either base-4.9.1.0:Data.Functor.Const
+                         base-4.9.1.0:Data.Monoid base-4.9.1.0:Data.Type.Equality
+                         base-4.9.1.0:GHC.Generics base-4.9.1.0:GHC.IO.Exception
+                         base-4.9.1.0:GHC.TypeLits
+import  -/  base-4.9.1.0:GHC.Base c4231c43c07e46080a26bf94094c7aa1
+import  -/  base-4.9.1.0:GHC.Err 3bba35a16538d33d424682ce66876cdd
+import  -/  base-4.9.1.0:GHC.Float 33e2b9ffe427edd6a5c2fd6a3b26703c
+import  -/  base-4.9.1.0:GHC.Num 00bfaa7b2f9d6084913c0697a8a49ec8
+import  -/  base-4.9.1.0:GHC.Real 82e4e59051a13dba1da63e1e970a69e6
+import  -/  base-4.9.1.0:GHC.Show a027f5ac24879eaba752f44aa90fe511
+import  -/  base-4.9.1.0:Prelude 22dd289b8469a8fa8dc81cab7b237771
+import  -/  ghc-prim-0.5.0.0:GHC.Classes 0bdf3d057a415ec1b84a7b1994efbe47
+c705ac1a94d4554fcfc2a7686d530a6d
+  $fBasisTypeLagrange :: Basis.BasisType Basis.Lagrange
+  DFunId
+  {- Strictness: m, Inline: [ALWAYS] CONLIKE,
+     Unfolding: DFun:.
+                  @ Basis.Lagrange
+                  Basis.$fBasisTypeLagrange_$cpsi
+                  Basis.$fBasisTypeLagrange_$cdpsidxi
+                  Basis.$fBasisTypeLagrange_$corder -}
+b045a376a951d5bd974ee26f47dd3bdd
+  $fBasisTypeLagrange1 :: Basis.Lagrange -> Basis.Lagrange
+  {- Arity: 1, HasNoCafRefs, Strictness: <S,1*U(U)>m,
+     Unfolding: InlineRule (1, True, True)
+                (\ (ds :: Basis.Lagrange) -> ds) -}
+c853a96b32b1a53d60dd7c4d21d23d40
+  $fBasisTypeLagrange2 :: a
+  {- Strictness: x -}
+5a27ae96d8935bbed0ee7beeefebc051
+  $fBasisTypeLagrange3 :: a
+  {- Strictness: x -}
+d6892a4458bdd2f4f81363175aa6fd2f
+  $fBasisTypeLagrange4 :: GHC.Integer.Type.Integer
+  {- HasNoCafRefs, Unfolding: (2) -}
+e373033f1c9e4f9754fcf9ba0ab3fb0a
+  $fBasisTypeLagrange5 :: GHC.Integer.Type.Integer
+  {- HasNoCafRefs, Unfolding: (1) -}
+58b5bcb9fa587b65ca65fad0f71b65a9
+  $fBasisTypeLagrange6 :: a
+  {- Strictness: x -}
+78b95af3d12f0d1234442b217cc90c93
+  $fBasisTypeLagrange7 :: a
+  {- Strictness: x -}
+b529e88c7da75d751f2ea06a1648ce83
+  $fBasisTypeLagrange_$cdpsidxi ::
+    GHC.Float.Floating a =>
+    Basis.Lagrange -> a -> GHC.Types.Int -> GHC.Types.Int -> a
+  {- Arity: 1,
+     Strictness: <L,1*U(1*U,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A)>,
+     Unfolding: (\ @ a ($dFloating :: GHC.Float.Floating a) ->
+                 let {
+                   $dFractional :: GHC.Real.Fractional a
+                   = GHC.Float.$p1Floating @ a $dFloating
+                 } in
+                 let {
+                   $dNum :: GHC.Num.Num a = GHC.Real.$p1Fractional @ a $dFractional
+                 } in
+                 let {
+                   lvl20 :: a
+                   = GHC.Real./
+                       @ a
+                       $dFractional
+                       (GHC.Num.fromInteger @ a $dNum Basis.$fBasisTypeLagrange5)
+                       (GHC.Num.fromInteger @ a $dNum Basis.$fBasisTypeLagrange4)
+                 } in
+                 let {
+                   lvl21 :: a
+                   = GHC.Num.negate
+                       @ a
+                       $dNum
+                       (GHC.Real./
+                          @ a
+                          $dFractional
+                          (GHC.Num.fromInteger @ a $dNum Basis.$fBasisTypeLagrange5)
+                          (GHC.Num.fromInteger @ a $dNum Basis.$fBasisTypeLagrange4))
+                 } in
+                 \ (ds :: Basis.Lagrange)
+                   (xi :: a)
+                   (i :: GHC.Types.Int)
+                   (n :: GHC.Types.Int) ->
+                 case ds `cast` (Basis.N:Lagrange[0]) of wild { GHC.Types.I# ds1 ->
+                 case ds1 of ds2 {
+                   DEFAULT -> Basis.$fBasisTypeLagrange3 @ a
+                   1#
+                   -> case i of wild1 { GHC.Types.I# x ->
+                      case x of wild2 {
+                        DEFAULT -> Basis.$fBasisTypeLagrange2 @ a
+                        0# -> lvl21
+                        1# -> lvl20 } } } }) -}
+a3fbfeb589781a745722937d3ff0bf9c
+  $fBasisTypeLagrange_$corder :: Basis.Lagrange -> GHC.Types.Int
+  {- Arity: 1, HasNoCafRefs, Strictness: <S,1*U(U)>m,
+     Unfolding: InlineRule (0, True, True)
+                Basis.$fBasisTypeLagrange1
+                  `cast`
+                (<Basis.Lagrange>_R ->_R Basis.N:Lagrange[0]) -}
+623ec1e4aad72a8620c42972cfd806ea
+  $fBasisTypeLagrange_$cpsi ::
+    GHC.Float.Floating a => Basis.Lagrange -> a -> GHC.Types.Int -> a
+  {- Arity: 1,
+     Strictness: <L,1*U(1*U,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A,A)>,
+     Unfolding: (\ @ a ($dFloating :: GHC.Float.Floating a) ->
+                 let {
+                   $dFractional :: GHC.Real.Fractional a
+                   = GHC.Float.$p1Floating @ a $dFloating
+                 } in
+                 let {
+                   $dNum :: GHC.Num.Num a = GHC.Real.$p1Fractional @ a $dFractional
+                 } in
+                 let {
+                   lvl20 :: a
+                   = GHC.Num.fromInteger @ a $dNum Basis.$fBasisTypeLagrange5
+                 } in
+                 let {
+                   lvl21 :: a
+                   = GHC.Real./
+                       @ a
+                       $dFractional
+                       lvl20
+                       (GHC.Num.fromInteger @ a $dNum Basis.$fBasisTypeLagrange4)
+                 } in
+                 \ (ds :: Basis.Lagrange) (xi :: a) (i :: GHC.Types.Int) ->
+                 case ds `cast` (Basis.N:Lagrange[0]) of wild { GHC.Types.I# ds1 ->
+                 case ds1 of ds2 {
+                   DEFAULT -> Basis.$fBasisTypeLagrange7 @ a
+                   1#
+                   -> case i of wild1 { GHC.Types.I# x ->
+                      case x of wild2 {
+                        DEFAULT -> Basis.$fBasisTypeLagrange6 @ a
+                        0# -> GHC.Num.* @ a $dNum lvl21 (GHC.Num.- @ a $dNum lvl20 xi)
+                        1#
+                        -> GHC.Num.*
+                             @ a
+                             $dNum
+                             lvl21
+                             (GHC.Num.+ @ a $dNum lvl20 xi) } } } }) -}
+010765525500d7b57bf9e8bf1777eeed
+  $fEqLagrange :: GHC.Classes.Eq Basis.Lagrange
+  DFunId
+  {- HasNoCafRefs, Strictness: m, Inline: [ALWAYS] CONLIKE,
+     Unfolding: DFun:.
+                  @ Basis.Lagrange Basis.$fEqLagrange_$c== Basis.$fEqLagrange_$c/= -}
+010765525500d7b57bf9e8bf1777eeed
+  $fEqLagrange_$c/= ::
+    Basis.Lagrange -> Basis.Lagrange -> GHC.Types.Bool
+  {- Arity: 2, HasNoCafRefs, Strictness: <S(S),1*U(U)><S(S),1*U(U)>,
+     Unfolding: InlineRule (0, True, True)
+                GHC.Classes.neInt
+                  `cast`
+                (Sym (Basis.N:Lagrange[0])
+                 ->_R Sym (Basis.N:Lagrange[0])
+                 ->_R <GHC.Types.Bool>_R) -}
+010765525500d7b57bf9e8bf1777eeed
+  $fEqLagrange_$c== ::
+    Basis.Lagrange -> Basis.Lagrange -> GHC.Types.Bool
+  {- Arity: 2, HasNoCafRefs, Strictness: <S(S),1*U(U)><S(S),1*U(U)>,
+     Unfolding: InlineRule (0, True, True)
+                GHC.Classes.eqInt
+                  `cast`
+                (Sym (Basis.N:Lagrange[0])
+                 ->_R Sym (Basis.N:Lagrange[0])
+                 ->_R <GHC.Types.Bool>_R) -}
+c800a929c4fe22be0c35a24b082a3bb7
+  $fEqLegendre :: GHC.Classes.Eq Basis.Legendre
+  DFunId
+  {- HasNoCafRefs, Strictness: m, Inline: [ALWAYS] CONLIKE,
+     Unfolding: DFun:.
+                  @ Basis.Legendre Basis.$fEqLegendre_$c== Basis.$fEqLegendre_$c/= -}
+c800a929c4fe22be0c35a24b082a3bb7
+  $fEqLegendre_$c/= ::
+    Basis.Legendre -> Basis.Legendre -> GHC.Types.Bool
+  {- Arity: 2, HasNoCafRefs, Strictness: <S(S),1*U(U)><S(S),1*U(U)>,
+     Unfolding: InlineRule (0, True, True)
+                GHC.Classes.neInt
+                  `cast`
+                (Sym (Basis.N:Legendre[0])
+                 ->_R Sym (Basis.N:Legendre[0])
+                 ->_R <GHC.Types.Bool>_R) -}
+c800a929c4fe22be0c35a24b082a3bb7
+  $fEqLegendre_$c== ::
+    Basis.Legendre -> Basis.Legendre -> GHC.Types.Bool
+  {- Arity: 2, HasNoCafRefs, Strictness: <S(S),1*U(U)><S(S),1*U(U)>,
+     Unfolding: InlineRule (0, True, True)
+                GHC.Classes.eqInt
+                  `cast`
+                (Sym (Basis.N:Legendre[0])
+                 ->_R Sym (Basis.N:Legendre[0])
+                 ->_R <GHC.Types.Bool>_R) -}
+010765525500d7b57bf9e8bf1777eeed
+  $fShowLagrange :: GHC.Show.Show Basis.Lagrange
+  DFunId
+  {- Strictness: m, Inline: [ALWAYS] CONLIKE,
+     Unfolding: DFun:.
+                  @ Basis.Lagrange
+                  Basis.$fShowLagrange_$cshowsPrec
+                  Basis.$fShowLagrange_$cshow
+                  Basis.$fShowLagrange_$cshowList -}
+010765525500d7b57bf9e8bf1777eeed
+  $fShowLagrange1 :: Basis.Lagrange -> GHC.Show.ShowS
+  {- Arity: 2,
+     Unfolding: (\ (w :: Basis.Lagrange) (w1 :: GHC.Base.String) ->
+                 Basis.$w$cshowsPrec 0# w w1) -}
+b4f9484c4da395664034ff9d807caf1f
+  $fShowLagrange2 :: [GHC.Types.Char]
+  {- Unfolding: (GHC.CString.unpackCString# "Lagrange "#) -}
+010765525500d7b57bf9e8bf1777eeed
+  $fShowLagrange_$cshow :: Basis.Lagrange -> GHC.Base.String
+  {- Arity: 1, Strictness: <L,1*U(U)>,
+     Unfolding: (\ (x :: Basis.Lagrange) ->
+                 GHC.Base.++
+                   @ GHC.Types.Char
+                   Basis.$fShowLagrange2
+                   (case x `cast` (Basis.N:Lagrange[0]) of ww2 { GHC.Types.I# ww3 ->
+                    case GHC.Show.$wshowSignedInt
+                           11#
+                           ww3
+                           (GHC.Types.[] @ GHC.Types.Char) of ww4 { (#,#) ww5 ww6 ->
+                    GHC.Types.: @ GHC.Types.Char ww5 ww6 } })) -}
+010765525500d7b57bf9e8bf1777eeed
+  $fShowLagrange_$cshowList :: [Basis.Lagrange] -> GHC.Show.ShowS
+  {- Arity: 2,
+     Unfolding: (GHC.Show.showList__
+                   @ Basis.Lagrange
+                   Basis.$fShowLagrange1) -}
+010765525500d7b57bf9e8bf1777eeed
+  $fShowLagrange_$cshowsPrec ::
+    GHC.Types.Int -> Basis.Lagrange -> GHC.Show.ShowS
+  {- Arity: 3, Strictness: <S(S),1*U(U)><L,1*U(U)><L,U>,
+     Inline: INLINE[0],
+     Unfolding: InlineRule (3, True, False)
+                (\ (w :: GHC.Types.Int)
+                   (w1 :: Basis.Lagrange)
+                   (w2 :: GHC.Base.String) ->
+                 case w of ww { GHC.Types.I# ww1 ->
+                 Basis.$w$cshowsPrec ww1 w1 w2 }) -}
+c800a929c4fe22be0c35a24b082a3bb7
+  $fShowLegendre :: GHC.Show.Show Basis.Legendre
+  DFunId
+  {- Strictness: m, Inline: [ALWAYS] CONLIKE,
+     Unfolding: DFun:.
+                  @ Basis.Legendre
+                  Basis.$fShowLegendre_$cshowsPrec
+                  Basis.$fShowLegendre_$cshow
+                  Basis.$fShowLegendre_$cshowList -}
+c800a929c4fe22be0c35a24b082a3bb7
+  $fShowLegendre1 :: Basis.Legendre -> GHC.Show.ShowS
+  {- Arity: 2,
+     Unfolding: (\ (w :: Basis.Legendre) (w1 :: GHC.Base.String) ->
+                 Basis.$w$cshowsPrec1 0# w w1) -}
+c1ec9e2d51417cc504df2495da2dab83
+  $fShowLegendre2 :: [GHC.Types.Char]
+  {- Unfolding: (GHC.CString.unpackCString# "Legendre "#) -}
+c800a929c4fe22be0c35a24b082a3bb7
+  $fShowLegendre_$cshow :: Basis.Legendre -> GHC.Base.String
+  {- Arity: 1, Strictness: <L,1*U(U)>,
+     Unfolding: (\ (x :: Basis.Legendre) ->
+                 GHC.Base.++
+                   @ GHC.Types.Char
+                   Basis.$fShowLegendre2
+                   (case x `cast` (Basis.N:Legendre[0]) of ww2 { GHC.Types.I# ww3 ->
+                    case GHC.Show.$wshowSignedInt
+                           11#
+                           ww3
+                           (GHC.Types.[] @ GHC.Types.Char) of ww4 { (#,#) ww5 ww6 ->
+                    GHC.Types.: @ GHC.Types.Char ww5 ww6 } })) -}
+c800a929c4fe22be0c35a24b082a3bb7
+  $fShowLegendre_$cshowList :: [Basis.Legendre] -> GHC.Show.ShowS
+  {- Arity: 2,
+     Unfolding: (GHC.Show.showList__
+                   @ Basis.Legendre
+                   Basis.$fShowLegendre1) -}
+c800a929c4fe22be0c35a24b082a3bb7
+  $fShowLegendre_$cshowsPrec ::
+    GHC.Types.Int -> Basis.Legendre -> GHC.Show.ShowS
+  {- Arity: 3, Strictness: <S(S),1*U(U)><L,1*U(U)><L,U>,
+     Inline: INLINE[0],
+     Unfolding: InlineRule (3, True, False)
+                (\ (w :: GHC.Types.Int)
+                   (w1 :: Basis.Legendre)
+                   (w2 :: GHC.Base.String) ->
+                 case w of ww { GHC.Types.I# ww1 ->
+                 Basis.$w$cshowsPrec1 ww1 w1 w2 }) -}
+39db343520351898e06195d42d7f4c3a
+  $tc'C:BasisType :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   14340476911284472332##
+                   8655066117240207040##
+                   Basis.$trModule
+                   Basis.$tc'C:BasisType1) -}
+551b377931adf95727378f4f1bffff75
+  $tc'C:BasisType1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS "'C:BasisType"#) -}
+5626115affa29ae274c920c102e3f529
+  $tc'Lagrange :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   8681672816232153197##
+                   17237629738826477264##
+                   Basis.$trModule
+                   Basis.$tc'Lagrange1) -}
+7e1639a0b336aef52b98d3e6c4316eb9
+  $tc'Lagrange1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS "'Lagrange"#) -}
+0fca96742b98378b6ec68ac804e3a9b9
+  $tc'Legendre :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   6854397038967297296##
+                   16317038528917268398##
+                   Basis.$trModule
+                   Basis.$tc'Legendre1) -}
+586c7f6eb8e2094b46f2578b7fe3aaa0
+  $tc'Legendre1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS "'Legendre"#) -}
+55ebe995dd7ad0aabfea5bed95cc9e51
+  $tcBasisType :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   423286048204153715##
+                   3219620910486394294##
+                   Basis.$trModule
+                   Basis.$tcBasisType1) -}
+88ba1eb1eb851d6f52422a8caebdd6eb
+  $tcBasisType1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS "BasisType"#) -}
+f81f5d26c3b4138da86a5eb3c68e53ac
+  $tcLagrange :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   3933162353380861779##
+                   11411313244216489461##
+                   Basis.$trModule
+                   Basis.$tcLagrange1) -}
+a35b47e77abe5fbc47e471268085b8f9
+  $tcLagrange1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS "Lagrange"#) -}
+6dff90659c06687e449c9fc2a88f5498
+  $tcLegendre :: GHC.Types.TyCon
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.TyCon
+                   8813173482363499377##
+                   17924170630649460894##
+                   Basis.$trModule
+                   Basis.$tcLegendre1) -}
+5b8f2cfb6cacce9ebb8da6b8835b6b39
+  $tcLegendre1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS "Legendre"#) -}
+9bdef54adfc2a904dc5fb2a923fc1253
+  $trModule :: GHC.Types.Module
+  {- HasNoCafRefs, Strictness: m,
+     Unfolding: (GHC.Types.Module Basis.$trModule2 Basis.$trModule1) -}
+324afcb5c14ea2640ec0667b07eae5ca
+  $trModule1 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS "Basis"#) -}
+ca3ae13827e0f11f9441eb69d83ae24d
+  $trModule2 :: GHC.Types.TrName
+  {- HasNoCafRefs, Strictness: m1,
+     Unfolding: (GHC.Types.TrNameS "main"#) -}
+010765525500d7b57bf9e8bf1777eeed
+  $w$cshowsPrec ::
+    GHC.Prim.Int#
+    -> Basis.Lagrange -> GHC.Base.String -> GHC.Base.String
+  {- Arity: 3, Strictness: <S,U><L,1*U(U)><L,U>, Inline: [0],
+     Unfolding: (\ (ww :: GHC.Prim.Int#)
+                   (w :: Basis.Lagrange)
+                   (w1 :: GHC.Base.String) ->
+                 case GHC.Prim.tagToEnum#
+                        @ GHC.Types.Bool
+                        (GHC.Prim.>=# ww 11#) of wild {
+                   GHC.Types.False
+                   -> GHC.Base.++
+                        @ GHC.Types.Char
+                        Basis.$fShowLagrange2
+                        (case w `cast` (Basis.N:Lagrange[0]) of ww2 { GHC.Types.I# ww3 ->
+                         case GHC.Show.$wshowSignedInt 11# ww3 w1 of ww4 { (#,#) ww5 ww6 ->
+                         GHC.Types.: @ GHC.Types.Char ww5 ww6 } })
+                   GHC.Types.True
+                   -> GHC.Types.:
+                        @ GHC.Types.Char
+                        GHC.Show.shows7
+                        (GHC.Base.++
+                           @ GHC.Types.Char
+                           Basis.$fShowLagrange2
+                           (case w `cast` (Basis.N:Lagrange[0]) of ww2 { GHC.Types.I# ww3 ->
+                            case GHC.Show.$wshowSignedInt
+                                   11#
+                                   ww3
+                                   (GHC.Types.:
+                                      @ GHC.Types.Char
+                                      GHC.Show.shows4
+                                      w1) of ww4 { (#,#) ww5 ww6 ->
+                            GHC.Types.: @ GHC.Types.Char ww5 ww6 } })) }) -}
+c800a929c4fe22be0c35a24b082a3bb7
+  $w$cshowsPrec1 ::
+    GHC.Prim.Int#
+    -> Basis.Legendre -> GHC.Base.String -> GHC.Base.String
+  {- Arity: 3, Strictness: <S,U><L,1*U(U)><L,U>, Inline: [0],
+     Unfolding: (\ (ww :: GHC.Prim.Int#)
+                   (w :: Basis.Legendre)
+                   (w1 :: GHC.Base.String) ->
+                 case GHC.Prim.tagToEnum#
+                        @ GHC.Types.Bool
+                        (GHC.Prim.>=# ww 11#) of wild {
+                   GHC.Types.False
+                   -> GHC.Base.++
+                        @ GHC.Types.Char
+                        Basis.$fShowLegendre2
+                        (case w `cast` (Basis.N:Legendre[0]) of ww2 { GHC.Types.I# ww3 ->
+                         case GHC.Show.$wshowSignedInt 11# ww3 w1 of ww4 { (#,#) ww5 ww6 ->
+                         GHC.Types.: @ GHC.Types.Char ww5 ww6 } })
+                   GHC.Types.True
+                   -> GHC.Types.:
+                        @ GHC.Types.Char
+                        GHC.Show.shows7
+                        (GHC.Base.++
+                           @ GHC.Types.Char
+                           Basis.$fShowLegendre2
+                           (case w `cast` (Basis.N:Legendre[0]) of ww2 { GHC.Types.I# ww3 ->
+                            case GHC.Show.$wshowSignedInt
+                                   11#
+                                   ww3
+                                   (GHC.Types.:
+                                      @ GHC.Types.Char
+                                      GHC.Show.shows4
+                                      w1) of ww4 { (#,#) ww5 ww6 ->
+                            GHC.Types.: @ GHC.Types.Char ww5 ww6 } })) }) -}
+c705ac1a94d4554fcfc2a7686d530a6d
+  class BasisType b where
+    psi :: GHC.Float.Floating a => b -> a -> GHC.Types.Int -> a
+    dpsidxi :: GHC.Float.Floating a =>
+               b -> a -> GHC.Types.Int -> GHC.Types.Int -> a
+    order :: b -> GHC.Types.Int
+    {-# MINIMAL psi, dpsidxi, order #-}
+010765525500d7b57bf9e8bf1777eeed
+  newtype Lagrange = Lagrange GHC.Types.Int
+c800a929c4fe22be0c35a24b082a3bb7
+  newtype Legendre = Legendre GHC.Types.Int
+instance [safe] Basis.BasisType [Basis.Lagrange]
+  = Basis.$fBasisTypeLagrange
+instance [safe] GHC.Classes.Eq [Basis.Lagrange]
+  = Basis.$fEqLagrange
+instance [safe] GHC.Classes.Eq [Basis.Legendre]
+  = Basis.$fEqLegendre
+instance [safe] GHC.Show.Show [Basis.Lagrange]
+  = Basis.$fShowLagrange
+instance [safe] GHC.Show.Show [Basis.Legendre]
+  = Basis.$fShowLegendre
+vectorised variables:
+vectorised tycons:
+vectorised reused tycons:
+parallel variables:
+parallel tycons:
+trusted: safe
+require own pkg trusted: False
+
