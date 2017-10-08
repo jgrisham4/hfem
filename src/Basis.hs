@@ -1,9 +1,10 @@
 module Basis
 ( Lagrange(..)
 , Legendre(..)
+, BasisType
 , psi
 , dpsidxi
-, order
+, basisOrder
 ) where
 
 -- Basis types
@@ -12,9 +13,9 @@ newtype Legendre = Legendre Int deriving (Show,Eq)
 
 -- Type class for basis
 class BasisType b where
-  psi     :: (Floating a) => b -> a -> Int -> a
-  dpsidxi :: (Floating a) => b -> a -> Int -> Int -> a
-  order   :: b -> Int
+  psi        :: (Floating a) => b -> a -> Int -> a
+  dpsidxi    :: (Floating a) => b -> a -> Int -> Int -> a
+  basisOrder :: b -> Int
 
 -- Instance for Lagrange basis
 instance BasisType Lagrange where
@@ -25,10 +26,12 @@ instance BasisType Lagrange where
                         | otherwise = error "i must be 0 or 1."
   psi (Lagrange _) _ _ = error "Input error."
 
-  -- Linear basis derivative
-  dpsidxi (Lagrange 1) xi i n | i == 0 = -1/2
+  -- Linear basis derivative (all derivatives higher than 1st are zero)
+  dpsidxi (Lagrange 1) xi i 1 | i == 0 = -1/2
                               | i == 1 = 1/2
+                              | otherwise = error "i must be 0 or 1."
+  dpsidxi (Lagrange 1) xi i _ | i == 0 || i == 1 = 0
                               | otherwise = error "i must be 0 or 1."
 
   -- Function for getting the order
-  order (Lagrange n) = n
+  basisOrder (Lagrange n) = n
