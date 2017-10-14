@@ -13,11 +13,12 @@ newtype Legendre = Legendre Int deriving (Show,Eq)
 
 -- Type class for basis
 class BasisType b where
-  psi        :: (Floating a) => b -> a -> Int -> a
-  dpsidxi    :: (Floating a) => b -> a -> Int -> Int -> a
+  psi        :: (Fractional a) => b -> a -> Int -> a
+  dpsidxi    :: (Fractional a) => b -> a -> Int -> Int -> a
   basisOrder :: b -> Int
 
 -- Instance for Lagrange basis
+-- TODO change psi so that it takes i and j where i corresponds to the node number and j cooresponds to the order of the derivative taken.
 instance BasisType Lagrange where
 
   -- Linear basis

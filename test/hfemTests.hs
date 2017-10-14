@@ -15,7 +15,7 @@ main = defaultMainWithIngredients ingredients tests
 
 -- Setting up tests
 tests :: TestTree
-tests = testGroup "Tests" [basisTests, shpFcnTests, nodeTests]
+tests = testGroup "Tests" [basisTests, shpFcnTests, shpFcnBasisMapTests, shpFcnDerivTests, nodeTests]
 
 {-
 -----------------------------------------------------------
@@ -47,7 +47,7 @@ Shape function tests
 -----------------------------------------------------------
 -}
 
-tPShpFcn = TensorProduct linearLagrangeBasis
+tPShpFcn = TensorProduct linearLagrangeBasis 2
 
 shpFcnTests = testGroup "Shape function tests"
   [ testCase "Lagrange tensor prod getBasis" $ assertEqual "returns Lagrange 1" linearLagrangeBasis (getBasis tPShpFcn)
@@ -68,6 +68,32 @@ shpFcnTests = testGroup "Shape function tests"
   , testCase "Lagrange tensor prod 2, i=3"   $ assertEqual "returns 0 for xi= 1, eta= 1, i=3" 0.0 (n tPShpFcn [ 1.0, 1.0] 3)
   , testCase "Lagrange tensor prod 3, i=3"   $ assertEqual "returns 1 for xi=-1, eta= 1, i=3" 1.0 (n tPShpFcn [-1.0, 1.0] 3)
   ]
+
+shpFcnBasisMapTests = testGroup "Shape function-basis mapping tests"
+  [ testCase "1D Shape fcn to basis map 0" $ assertEqual "returns [0]"     [0]     (shpFcnBasisMap 0 1)
+  , testCase "1D Shape fcn to basis map 1" $ assertEqual "returns [1]"     [1]     (shpFcnBasisMap 1 1)
+  , testCase "2D Shape fcn to basis map 0" $ assertEqual "returns [0,0]"   [0,0]   (shpFcnBasisMap 0 2)
+  , testCase "2D Shape fcn to basis map 1" $ assertEqual "returns [1,0]"   [1,0]   (shpFcnBasisMap 1 2)
+  , testCase "2D Shape fcn to basis map 2" $ assertEqual "returns [1,1]"   [1,1]   (shpFcnBasisMap 2 2)
+  , testCase "2D Shape fcn to basis map 3" $ assertEqual "returns [0,1]"   [0,1]   (shpFcnBasisMap 3 2)
+  , testCase "3D Shape fcn to basis map 0" $ assertEqual "returns [0,0,0]" [0,0,0] (shpFcnBasisMap 0 3)
+  , testCase "3D Shape fcn to basis map 1" $ assertEqual "returns [1,0,0]" [1,0,0] (shpFcnBasisMap 1 3)
+  , testCase "3D Shape fcn to basis map 2" $ assertEqual "returns [1,1,0]" [1,1,0] (shpFcnBasisMap 2 3)
+  , testCase "3D Shape fcn to basis map 3" $ assertEqual "returns [0,1,0]" [0,1,0] (shpFcnBasisMap 3 3)
+  , testCase "3D Shape fcn to basis map 4" $ assertEqual "returns [0,0,1]" [0,0,1] (shpFcnBasisMap 4 3)
+  , testCase "3D Shape fcn to basis map 5" $ assertEqual "returns [1,0,1]" [1,0,1] (shpFcnBasisMap 5 3)
+  , testCase "3D Shape fcn to basis map 6" $ assertEqual "returns [1,1,1]" [1,1,1] (shpFcnBasisMap 6 3)
+  , testCase "3D Shape fcn to basis map 7" $ assertEqual "returns [0,1,1]" [0,1,1] (shpFcnBasisMap 7 3)
+  ]
+
+tp1 = TensorProduct linearLagrangeBasis 1
+tp2 = TensorProduct linearLagrangeBasis 2
+
+shpFcnDerivTests = testGroup "Shape function derivative tests"
+  [ testCase "1D Shape fcn deriv" $ assertEqual "returns [-1/2]" [dpsidxi linearLagrangeBasis 0.0 0 1] (dndXi tp1 [0.0] 0)
+  , testCase "1D Shape fcn deriv" $ assertEqual "returns [ 1/2]" [dpsidxi linearLagrangeBasis 0.0 1 1] (dndXi tp1 [0.0] 1)
+  ]
+--  , testCase "1D Shape fcn deriv" $ assertEqual "returns [ 1/2]" (dpsidxi linearLagrangeBasis 0.0 1 1) (dndXi tp1 [0.0] 1)
 
 {-
 -----------------------------------------------------------

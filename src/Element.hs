@@ -3,13 +3,25 @@ module Element
 , Tri(..)
 ) where
 
+import Numeric.LinearAlgebra
+
+import Node
+import ShapeFcns
+
 -- Element types
--- I'm not sure that the order is really necessary as it is stored in the basis
--- as well??
-data Quad = Quad Int [Int] deriving (Show,Eq)
-data Tri  = Tri Int [Int] deriving (Show,Eq)
+data Quad s = Quad s [Node] Int deriving (Show,Eq)
+data Tri  s = Tri  s [Node] Int deriving (Show,Eq)
 
 -- Only going to implement quads for now
 
 class ElementType e where
-  computeJacobian :: (Floating a) => e -> [a] -> Int -> a
+  getElementNumber :: (ShapeFcnType s)                => e s -> Int
+  getElementOrder  :: (ShapeFcnType s)                => e s -> Int
+  computeJacobian  :: (ShapeFcnType s,Fractional a)   => e s -> [a] -> Int -> a
+
+--instance ElementType Quad where
+--  getElementNumber (Quad _ _ elemNum) = elemNum
+--  getElementOrder  (Quad shpFcn _ _) = getShapeFcnOrder shpFcn
+--  computeJacobian  (Quad shpFcn nodes elemNum) = matA <> matB where
+--      matA = fromLists $ [[]]
+--      matB = fromLists $ 
