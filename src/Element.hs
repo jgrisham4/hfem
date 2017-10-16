@@ -24,4 +24,4 @@ class ElementType e where
 --  getElementOrder  (Quad shpFcn _ _) = getShapeFcnOrder shpFcn
 --  computeJacobian  (Quad shpFcn nodes elemNum) = matA <> matB where
 --      matA = fromLists $ [[]]
---      matB = fromLists $ 
+--      matB = fromLists $

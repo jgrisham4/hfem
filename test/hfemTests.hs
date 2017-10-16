@@ -24,21 +24,18 @@ Basis tests
 -}
 
 -- Creating a linear basis
-linearLagrangeBasis = Basis.Lagrange 1
-lagrangePsi         = Basis.psi linearLagrangeBasis
-lagrangeDPsi xi i   = Basis.dpsidxi linearLagrangeBasis xi i 1
-lagrangeD2Psi xi i  = Basis.dpsidxi linearLagrangeBasis xi i 2
+linLag = Basis.Lagrange 1
 
 -- Linear Lagrange basis tests
 basisTests = testGroup "Basis tests"
-  [ testCase "Linear Lagrange  xi=-1, i=0" $ assertEqual "returns 1 for xi=-1, i=0" ( 1.0 :: Double) (lagrangePsi   (-1.0 :: Double) 0)
-  , testCase "Linear Lagrange   xi=1, i=0" $ assertEqual "returns 0 for  xi=1, i=0" ( 0.0 :: Double) (lagrangePsi   ( 1.0 :: Double) 0)
-  , testCase "Linear Lagrange  xi=-1, i=1" $ assertEqual "returns 0 for xi=-1, i=1" ( 0.0 :: Double) (lagrangePsi   (-1.0 :: Double) 1)
-  , testCase "Linear Lagrange   xi=1, i=1" $ assertEqual "returns 1 for  xi=1, i=1" ( 1.0 :: Double) (lagrangePsi   ( 1.0 :: Double) 1)
-  , testCase "Linear Lagrange   ddxi, i=0" $ assertEqual "returns -1/2 for i=0"     (-0.5 :: Double) (lagrangeDPsi  ( 0.0 :: Double) 0)
-  , testCase "Linear Lagrange   ddxi, i=1" $ assertEqual "returns  1/2 for i=1"     ( 0.5 :: Double) (lagrangeDPsi  ( 0.0 :: Double) 1)
-  , testCase "Linear Lagrange d2dxi2, i=0" $ assertEqual "returns 0 for i=0"        ( 0.0 :: Double) (lagrangeD2Psi ( 0.0 :: Double) 0)
-  , testCase "Linear Lagrange d2dxi2, i=1" $ assertEqual "returns 0 for i=1"        ( 0.0 :: Double) (lagrangeD2Psi ( 0.0 :: Double) 1)
+  [ testCase "Linear Lagrange  xi=-1, i=0" $ assertEqual "returns 1 for xi=-1, i=0" ( 1.0 :: Double) (psi linLag (-1.0 :: Double) 0 0)
+  , testCase "Linear Lagrange   xi=1, i=0" $ assertEqual "returns 0 for  xi=1, i=0" ( 0.0 :: Double) (psi linLag ( 1.0 :: Double) 0 0)
+  , testCase "Linear Lagrange  xi=-1, i=1" $ assertEqual "returns 0 for xi=-1, i=1" ( 0.0 :: Double) (psi linLag (-1.0 :: Double) 1 0)
+  , testCase "Linear Lagrange   xi=1, i=1" $ assertEqual "returns 1 for  xi=1, i=1" ( 1.0 :: Double) (psi linLag ( 1.0 :: Double) 1 0)
+  , testCase "Linear Lagrange   ddxi, i=0" $ assertEqual "returns -1/2 for i=0"     (-0.5 :: Double) (psi linLag ( 0.0 :: Double) 0 1)
+  , testCase "Linear Lagrange   ddxi, i=1" $ assertEqual "returns  1/2 for i=1"     ( 0.5 :: Double) (psi linLag ( 0.0 :: Double) 1 1)
+  , testCase "Linear Lagrange d2dxi2, i=0" $ assertEqual "returns 0 for i=0"        ( 0.0 :: Double) (psi linLag ( 0.0 :: Double) 0 2)
+  , testCase "Linear Lagrange d2dxi2, i=1" $ assertEqual "returns 0 for i=1"        ( 0.0 :: Double) (psi linLag ( 0.0 :: Double) 1 2)
   ]
 
 {-
@@ -47,26 +44,26 @@ Shape function tests
 -----------------------------------------------------------
 -}
 
-tPShpFcn = TensorProduct linearLagrangeBasis 2
+tPShpFcn = TensorProduct linLag 2
 
 shpFcnTests = testGroup "Shape function tests"
-  [ testCase "Lagrange tensor prod getBasis" $ assertEqual "returns Lagrange 1" linearLagrangeBasis (getBasis tPShpFcn)
-  , testCase "Lagrange tensor prod 0, i=0"   $ assertEqual "returns 1 for xi=-1, eta=-1, i=0" 1.0 (n tPShpFcn [-1.0,-1.0] 0)
-  , testCase "Lagrange tensor prod 1, i=0"   $ assertEqual "returns 0 for xi= 1, eta=-1, i=0" 0.0 (n tPShpFcn [ 1.0,-1.0] 0)
-  , testCase "Lagrange tensor prod 2, i=0"   $ assertEqual "returns 0 for xi= 1, eta= 1, i=0" 0.0 (n tPShpFcn [ 1.0, 1.0] 0)
-  , testCase "Lagrange tensor prod 3, i=0"   $ assertEqual "returns 0 for xi=-1, eta= 1, i=0" 0.0 (n tPShpFcn [-1.0, 1.0] 0)
-  , testCase "Lagrange tensor prod 0, i=1"   $ assertEqual "returns 0 for xi=-1, eta=-1, i=1" 0.0 (n tPShpFcn [-1.0,-1.0] 1)
-  , testCase "Lagrange tensor prod 1, i=1"   $ assertEqual "returns 1 for xi= 1, eta=-1, i=1" 1.0 (n tPShpFcn [ 1.0,-1.0] 1)
-  , testCase "Lagrange tensor prod 2, i=1"   $ assertEqual "returns 0 for xi= 1, eta= 1, i=1" 0.0 (n tPShpFcn [ 1.0, 1.0] 1)
-  , testCase "Lagrange tensor prod 3, i=1"   $ assertEqual "returns 0 for xi=-1, eta= 1, i=1" 0.0 (n tPShpFcn [-1.0, 1.0] 1)
-  , testCase "Lagrange tensor prod 0, i=2"   $ assertEqual "returns 0 for xi=-1, eta=-1, i=2" 0.0 (n tPShpFcn [-1.0,-1.0] 2)
-  , testCase "Lagrange tensor prod 1, i=2"   $ assertEqual "returns 0 for xi= 1, eta=-1, i=2" 0.0 (n tPShpFcn [ 1.0,-1.0] 2)
-  , testCase "Lagrange tensor prod 2, i=2"   $ assertEqual "returns 1 for xi= 1, eta= 1, i=2" 1.0 (n tPShpFcn [ 1.0, 1.0] 2)
-  , testCase "Lagrange tensor prod 3, i=2"   $ assertEqual "returns 0 for xi=-1, eta= 1, i=2" 0.0 (n tPShpFcn [-1.0, 1.0] 2)
-  , testCase "Lagrange tensor prod 0, i=3"   $ assertEqual "returns 0 for xi=-1, eta=-1, i=3" 0.0 (n tPShpFcn [-1.0,-1.0] 3)
-  , testCase "Lagrange tensor prod 1, i=3"   $ assertEqual "returns 0 for xi= 1, eta=-1, i=3" 0.0 (n tPShpFcn [ 1.0,-1.0] 3)
-  , testCase "Lagrange tensor prod 2, i=3"   $ assertEqual "returns 0 for xi= 1, eta= 1, i=3" 0.0 (n tPShpFcn [ 1.0, 1.0] 3)
-  , testCase "Lagrange tensor prod 3, i=3"   $ assertEqual "returns 1 for xi=-1, eta= 1, i=3" 1.0 (n tPShpFcn [-1.0, 1.0] 3)
+  [ testCase "Lagrange tensor prod getBasis" $ assertEqual "returns Lagrange 1" linLag (getBasis tPShpFcn)
+  , testCase "Lagrange tensor prod 0, i=0"   $ assertEqual "returns 1 for xi=-1, eta=-1, i=0" 1.0 (n tPShpFcn [-1.0,-1.0] 0 [0,0])
+  , testCase "Lagrange tensor prod 1, i=0"   $ assertEqual "returns 0 for xi= 1, eta=-1, i=0" 0.0 (n tPShpFcn [ 1.0,-1.0] 0 [0,0])
+  , testCase "Lagrange tensor prod 2, i=0"   $ assertEqual "returns 0 for xi= 1, eta= 1, i=0" 0.0 (n tPShpFcn [ 1.0, 1.0] 0 [0,0])
+  , testCase "Lagrange tensor prod 3, i=0"   $ assertEqual "returns 0 for xi=-1, eta= 1, i=0" 0.0 (n tPShpFcn [-1.0, 1.0] 0 [0,0])
+  , testCase "Lagrange tensor prod 0, i=1"   $ assertEqual "returns 0 for xi=-1, eta=-1, i=1" 0.0 (n tPShpFcn [-1.0,-1.0] 1 [0,0])
+  , testCase "Lagrange tensor prod 1, i=1"   $ assertEqual "returns 1 for xi= 1, eta=-1, i=1" 1.0 (n tPShpFcn [ 1.0,-1.0] 1 [0,0])
+  , testCase "Lagrange tensor prod 2, i=1"   $ assertEqual "returns 0 for xi= 1, eta= 1, i=1" 0.0 (n tPShpFcn [ 1.0, 1.0] 1 [0,0])
+  , testCase "Lagrange tensor prod 3, i=1"   $ assertEqual "returns 0 for xi=-1, eta= 1, i=1" 0.0 (n tPShpFcn [-1.0, 1.0] 1 [0,0])
+  , testCase "Lagrange tensor prod 0, i=2"   $ assertEqual "returns 0 for xi=-1, eta=-1, i=2" 0.0 (n tPShpFcn [-1.0,-1.0] 2 [0,0])
+  , testCase "Lagrange tensor prod 1, i=2"   $ assertEqual "returns 0 for xi= 1, eta=-1, i=2" 0.0 (n tPShpFcn [ 1.0,-1.0] 2 [0,0])
+  , testCase "Lagrange tensor prod 2, i=2"   $ assertEqual "returns 1 for xi= 1, eta= 1, i=2" 1.0 (n tPShpFcn [ 1.0, 1.0] 2 [0,0])
+  , testCase "Lagrange tensor prod 3, i=2"   $ assertEqual "returns 0 for xi=-1, eta= 1, i=2" 0.0 (n tPShpFcn [-1.0, 1.0] 2 [0,0])
+  , testCase "Lagrange tensor prod 0, i=3"   $ assertEqual "returns 0 for xi=-1, eta=-1, i=3" 0.0 (n tPShpFcn [-1.0,-1.0] 3 [0,0])
+  , testCase "Lagrange tensor prod 1, i=3"   $ assertEqual "returns 0 for xi= 1, eta=-1, i=3" 0.0 (n tPShpFcn [ 1.0,-1.0] 3 [0,0])
+  , testCase "Lagrange tensor prod 2, i=3"   $ assertEqual "returns 0 for xi= 1, eta= 1, i=3" 0.0 (n tPShpFcn [ 1.0, 1.0] 3 [0,0])
+  , testCase "Lagrange tensor prod 3, i=3"   $ assertEqual "returns 1 for xi=-1, eta= 1, i=3" 1.0 (n tPShpFcn [-1.0, 1.0] 3 [0,0])
   ]
 
 shpFcnBasisMapTests = testGroup "Shape function-basis mapping tests"
@@ -86,14 +83,12 @@ shpFcnBasisMapTests = testGroup "Shape function-basis mapping tests"
   , testCase "3D Shape fcn to basis map 7" $ assertEqual "returns [0,1,1]" [0,1,1] (shpFcnBasisMap 7 3)
   ]
 
-tp1 = TensorProduct linearLagrangeBasis 1
-tp2 = TensorProduct linearLagrangeBasis 2
+tp1 = TensorProduct linLag 1
 
 shpFcnDerivTests = testGroup "Shape function derivative tests"
-  [ testCase "1D Shape fcn deriv" $ assertEqual "returns [-1/2]" [dpsidxi linearLagrangeBasis 0.0 0 1] (dndXi tp1 [0.0] 0)
-  , testCase "1D Shape fcn deriv" $ assertEqual "returns [ 1/2]" [dpsidxi linearLagrangeBasis 0.0 1 1] (dndXi tp1 [0.0] 1)
+  [ testCase "1D Shape fcn deriv" $ assertEqual "returns [-1/2]" (psi linLag 0.0 0 1) (n tp1 [0.0] 0 [1])
+  , testCase "1D Shape fcn deriv" $ assertEqual "returns [ 1/2]" (psi linLag 0.0 1 1) (n tp1 [0.0] 1 [1])
   ]
---  , testCase "1D Shape fcn deriv" $ assertEqual "returns [ 1/2]" (dpsidxi linearLagrangeBasis 0.0 1 1) (dndXi tp1 [0.0] 1)
 
 {-
 -----------------------------------------------------------
@@ -117,3 +112,9 @@ nodeTests = testGroup "Node tests"
   , testCase "1d Node coordinates" $ assertEqual "returns coords" nodeCoords1 (nodeCoordinates node1d)
   , testCase "2d Node coordinates" $ assertEqual "returns coords" nodeCoords2 (nodeCoordinates node2d)
   ]
+
+{-
+-----------------------------------------------------------
+Element tests
+-----------------------------------------------------------
+-}
