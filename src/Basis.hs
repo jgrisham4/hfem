@@ -1,7 +1,7 @@
 module Basis
 ( Lagrange(..)
 , Legendre(..)
-, BasisType
+, Basis
 , psi
 , basisOrder
 ) where
@@ -11,12 +11,12 @@ newtype Lagrange = Lagrange Int deriving (Show,Eq)
 newtype Legendre = Legendre Int deriving (Show,Eq)
 
 -- Type class for basis
-class BasisType b where
+class Basis b where
   psi        :: (Fractional a) => b -> a -> Int -> Int -> a
   basisOrder :: b -> Int
 
 -- Instance for Lagrange basis
-instance BasisType Lagrange where
+instance Basis Lagrange where
 
   -- Linear basis
   psi (Lagrange 1) xi i j | i == 0 && j == 0 = 1/2*(1 - xi)
