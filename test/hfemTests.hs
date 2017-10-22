@@ -5,6 +5,7 @@ import Test.Tasty.Runners.JenkinsXML (jenkinsXMLRunner)
 import Basis
 import ShapeFcns
 import Node
+import Element
 
 
 -- Main
@@ -15,7 +16,7 @@ main = defaultMainWithIngredients ingredients tests
 
 -- Setting up tests
 tests :: TestTree
-tests = testGroup "Tests" [basisTests, shpFcnTests, shpFcnBasisMapTests, shpFcnDerivTests, nodeTests]
+tests = testGroup "Tests" [basisTests, shpFcnTests, shpFcnBasisMapTests, shpFcnDerivTests, nodeTests, elemTests]
 
 -----------------------------------------------------------
 -- Basis tests
@@ -205,6 +206,11 @@ nodeTests = testGroup "Node tests"
 -- Element tests
 -----------------------------------------------------------
 
--- Creating a 1D element using the Lagrange basis
+-- Creating a 1D element
+nodes = [Node 0 [-1.0], Node 1 [1.0]]
+lineElem = Line nodes 0
 
+elemTests = testGroup "Element tests"
+  [ testCase "1d element number" $ assertEqual "returns 0" (getElementNumber lineElem) 0
+  , testCase "1d Jacobian Determinant" $ assertEqual "returns 1" (computeJacobianDet lineElem tp1 [0.0 :: Double]) (1.0 :: Double) ]
 
