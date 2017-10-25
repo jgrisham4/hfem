@@ -5,6 +5,7 @@ module ShapeFcns
 , shpFcnBasisMap
 , getBasis
 , getShapeFcnOrder
+, getDimension
 , n
 , dndXi
 ) where
@@ -40,6 +41,9 @@ class ShapeFcn f where
   -- Returns the order of the shape function
   getShapeFcnOrder :: Basis a => f a -> Int
 
+  -- Returns the dimension
+  getDimension :: Basis a => f a -> Int
+
   -- Returns the basis which is used to build up the tensor product shape function
   getBasis :: Basis a => f a -> a
 
@@ -52,9 +56,8 @@ class ShapeFcn f where
 
 -- ShapeFcn instance for tensor product shape functions
 instance ShapeFcn TensorProduct where
-
   getShapeFcnOrder (TensorProduct basis _) = basisOrder basis
-
+  getDimension (TensorProduct _ dim) = dim
   getBasis (TensorProduct basis _) = basis
 
   n (TensorProduct basis 1  ) coords a deriv = psi basis (last coords) (last (shpFcnBasisMap a 1)) (last deriv)

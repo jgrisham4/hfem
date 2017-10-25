@@ -1,12 +1,10 @@
 module Element
 ( Line(..)
+, Quad(..)
 , getElementNumber
 , computeJacobian
 , computeJacobianDet
 ) where
---, Quad(..)
---, Tri(..)
---) where
 
 --import Numeric.HMatrix
 import qualified Numeric.LinearAlgebra as NLinAl
@@ -33,12 +31,13 @@ instance Element Line where
   computeJacobian  (Line nodes elemNum) shpFcn coords = matA <> matB where
       matA = tr $ fromLists $ map (dndXi shpFcn coords) [0..(getShapeFcnOrder shpFcn)]
       matB = fromLists $ map nodeCoordinates nodes
-  computeJacobianDet (Line nodes elemNum) shpFcn xi = det $ computeJacobian (Line nodes elemNum) shpFcn xi
+  computeJacobianDet (Line nodes elemNum) shpFcn coords = det $ computeJacobian (Line nodes elemNum) shpFcn coords
 
---instance (Fractional a) => Element (Quad s a) where
---  getElementNumber (Quad _ _ elemNum) = elemNum
---  getElementOrder  (Quad shpFcn _ _) = getShapeFcnOrder shpFcn
---  computeJacobian  (Quad shpFcn nodes elemNum) coords = matA <> matB where
---      matA = tr $ fromLists [map (dndXi shpFcn coords) [0..(getShapeFcnOrder shpFcn + 1)^2]]
---      matB = fromLists [map nodeCoordinates nodes]
---  computeJacobianDet (Quad shpFcn nodes elemNum) = det $ computeJacobian (Quad shpFcn nodes elemNum)
+instance Element Quad where
+  getElementNumber (Quad _ elemNum) = elemNum
+  computeJacobian (Quad nodes elemNum) shpFcn coords = matA <> matB
+    where
+      dim = getDimension shpFcn
+      matA = tr $ fromLists $ map (dndXi shpFcn coords) [0..(getShapeFcnOrder shpFcn + 1)^dim - 1]
+      matB = fromLists $ map nodeCoordinates nodes
+  computeJacobianDet (Quad nodes elemNum) shpFcn coords = det $ computeJacobian (Quad nodes elemNum) shpFcn coords

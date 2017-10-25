@@ -5,7 +5,7 @@ import Test.Tasty.Runners.JenkinsXML (jenkinsXMLRunner)
 import Basis
 import ShapeFcns
 import Node
-import Element
+import qualified Element
 
 
 -- Main
@@ -207,10 +207,18 @@ nodeTests = testGroup "Node tests"
 -----------------------------------------------------------
 
 -- Creating a 1D element
-nodes = [Node 0 [-1.0], Node 1 [1.0]]
-lineElem = Line nodes 0
+nodes1d = [Node 0 [-1.0], Node 1 [1.0]]
+nodes2d = [Node 0 [-1.0, -1.0], Node 1 [1.0, -1.0], Node 2 [1.0, 1.0], Node 3 [-1.0, 1.0]]
+nodes2d' = [Node 0 [0.0, 0.0], Node 1 [1.0, 0.0], Node 2 [1.0, 1.0], Node 3 [0.0, 1.0]]
+lineElem = Element.Line nodes1d 0
+quadElem = Element.Quad nodes2d 0
+quadElem' = Element.Quad nodes2d' 0
 
 elemTests = testGroup "Element tests"
-  [ testCase "1d element number" $ assertEqual "returns 0" (getElementNumber lineElem) 0
-  , testCase "1d Jacobian Determinant" $ assertEqual "returns 1" (computeJacobianDet lineElem tp1 [0.0 :: Double]) (1.0 :: Double) ]
+  [ testCase "1d element number" $ assertEqual "returns 0" (Element.getElementNumber lineElem) (0 :: Int)
+  , testCase "1d Jacobian Determinant" $ assertEqual "returns 1" (Element.computeJacobianDet lineElem tp1 [0.0 :: Double]) (1.0 :: Double)
+  , testCase "2d element number" $ assertEqual "returns 0" (Element.getElementNumber quadElem) (0 :: Int)
+  , testCase "2d Jacobian Determinant" $ assertEqual "returns 1" (Element.computeJacobianDet quadElem tp2 [0.0 :: Double, 0.0 :: Double]) (1.0 :: Double)
+  , testCase "2d Jacobian Determinant" $ assertEqual "returns 0.25" (Element.computeJacobianDet quadElem' tp2 [0.0 :: Double, 0.0 :: Double]) (0.25 :: Double)
+  ]
 
