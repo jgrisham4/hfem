@@ -210,9 +210,9 @@ nodeTests = testGroup "Node tests"
 nodes1d = [Node 0 [-1.0], Node 1 [1.0]]
 nodes2d = [Node 0 [-1.0, -1.0], Node 1 [1.0, -1.0], Node 2 [1.0, 1.0], Node 3 [-1.0, 1.0]]
 nodes2d' = [Node 0 [0.0, 0.0], Node 1 [1.0, 0.0], Node 2 [1.0, 1.0], Node 3 [0.0, 1.0]]
-lineElem = Element.Line nodes1d 0
-quadElem = Element.Quad nodes2d 0
-quadElem' = Element.Quad nodes2d' 0
+lineElem = Element.StructElem nodes1d 0
+quadElem = Element.StructElem nodes2d 0
+quadElem' = Element.StructElem nodes2d' 0
 
 elemTests = testGroup "Element tests"
   [ testCase "1d element number" $ assertEqual "returns 0" (Element.getElementNumber lineElem) (0 :: Int)
