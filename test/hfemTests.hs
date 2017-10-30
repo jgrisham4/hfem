@@ -6,6 +6,7 @@ import Basis
 import ShapeFcns
 import Node
 import qualified Element
+import Mesh
 
 
 -- Main
@@ -16,7 +17,7 @@ main = defaultMainWithIngredients ingredients tests
 
 -- Setting up tests
 tests :: TestTree
-tests = testGroup "Tests" [basisTests, shpFcnTests, shpFcnBasisMapTests, shpFcnDerivTests, nodeTests, elemTests]
+tests = testGroup "Tests" [basisTests, shpFcnTests, shpFcnBasisMapTests, shpFcnDerivTests, nodeTests, elemTests, meshTests]
 
 -----------------------------------------------------------
 -- Basis tests
@@ -215,10 +216,27 @@ quadElem = Element.StructElem nodes2d 0
 quadElem' = Element.StructElem nodes2d' 0
 
 elemTests = testGroup "Element tests"
-  [ testCase "1d element number" $ assertEqual "returns 0" (Element.getElementNumber lineElem) (0 :: Int)
-  , testCase "1d Jacobian Determinant" $ assertEqual "returns 1" (Element.computeJacobianDet lineElem tp1 [0.0 :: Double]) (1.0 :: Double)
-  , testCase "2d element number" $ assertEqual "returns 0" (Element.getElementNumber quadElem) (0 :: Int)
-  , testCase "2d Jacobian Determinant" $ assertEqual "returns 1" (Element.computeJacobianDet quadElem tp2 [0.0 :: Double, 0.0 :: Double]) (1.0 :: Double)
+  [ testCase "1d element number"       $ assertEqual "returns 0"    (Element.getElementNumber lineElem) (0 :: Int)
+  , testCase "1d Jacobian Determinant" $ assertEqual "returns 1"    (Element.computeJacobianDet lineElem tp1 [0.0 :: Double]) (1.0 :: Double)
+  , testCase "2d element number"       $ assertEqual "returns 0"    (Element.getElementNumber quadElem) (0 :: Int)
+  , testCase "2d Jacobian Determinant" $ assertEqual "returns 1"    (Element.computeJacobianDet quadElem tp2 [0.0 :: Double, 0.0 :: Double]) (1.0 :: Double)
   , testCase "2d Jacobian Determinant" $ assertEqual "returns 0.25" (Element.computeJacobianDet quadElem' tp2 [0.0 :: Double, 0.0 :: Double]) (0.25 :: Double)
+  ]
+
+-----------------------------------------------------------
+-- Mesh tests
+-----------------------------------------------------------
+
+mesh1d = generateMesh [0.0 :: Double] [1.0 :: Double] [3] Element.StructElem
+mesh1dElems = getMeshElements mesh1d
+mesh1dNodes = getMeshNodes mesh1d
+mesh2d = generateMesh (replicate 2 (0.0::Double)) (replicate 2 (1.0::Double)) [3,3] Element.StructElem
+mesh2dElems = getMeshElements mesh2d
+
+meshTests = testGroup "Mesh tests"
+  [ testCase "1d Element numbers"      $ assertEqual "returns [0,1]" [0,1] (map Element.getElementNumber mesh1dElems)
+  , testCase "1d Node numbers"         $ assertEqual "returns [0.0, 0.5, 1.0]" [0.0::Double, 0.5::Double, 1.0::Double] (concatMap nodeCoordinates mesh1dNodes)
+  , testCase "2d Element connectivity" $ assertEqual "returns first elem con" [0,1,4,3] (Element.getConnectivity (head mesh2dElems))
+  , testCase "2d Element connectivity" $ assertEqual "returns last elem con" [4,5,8,7] (Element.getConnectivity (last mesh2dElems))
   ]
 
