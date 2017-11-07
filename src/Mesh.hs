@@ -1,6 +1,7 @@
 module Mesh
 ( Mesh(..)
 , elemNodeNums
+, belemNodeNums
 , getMeshElements
 , getMeshNodes
 , generateMesh
@@ -13,7 +14,9 @@ import Element
 
 -- Type for a mesh
 -- Mesh [Elements] [boundaryElements]
-newtype Mesh e a = Mesh [e a] [e a] deriving (Show,Eq)
+data Mesh e a = Mesh { elements :: [e a]
+                     , boundaryElements :: [[e a]]
+                     } deriving (Show,Eq)
 
 -- Function for getting elements from a mesh
 getMeshElements :: (Floating a,Element e) => Mesh e a -> [e a]
@@ -73,11 +76,11 @@ generateMesh :: (Fractional a, Element e) => [a] -> [a] -> [Int] -> ([Node a] ->
 generateMesh xInitial xFinal npts elemConstructor = Mesh elems belems
   where
     dim = length xInitial
-    nodeCoords = mapM (\(lo, hi, n) -> [lo + (fromIntegral v/fromIntegral (n-1)) * hi | v <- [0..(n-1)]]) (zip3 xInitial xFinal npts)
+    nodeCoords = map reverse $ mapM (\(lo, hi, n) -> [lo + (fromIntegral v/fromIntegral (n-1)) * hi | v <- [0..(n-1)]]) (zip3 xInitial xFinal npts)
     nodes = [Node i (nodeCoords !! i) | i <- [0..(length nodeCoords - 1)]]
     numNodes = length nodes
     nelem = product $ map (\x -> x-1) npts
-    belemNodes = [[[nodes !! n | n <- nn] | nn <- bNodeNums] | bNodeNums <- belemNodeNums dim npts]
+    belemNodes = [[[nodes !! n | n <- belemCon] | belemCon <- bCon] | bCon <- belemNodeNums dim npts]
     elemNodes = [[nodes !! n | n <- nn] | nn <- elemNodeNums dim npts]
     elems = [elemConstructor (elemNodes !! i) i | i <- [0..(nelem-1)]]
-    belems = [[elemConstructor (belemNodes !! i) someId | i <- []]]
+    belems = [[elemConstructor (belemNodes !! bId !! eId) (eId + bId * length (belemNodes !! bId)) | eId <- [0..(length (belemNodes !! bId) - 1)]] | bId <- [0..(length belemNodes - 1)]]

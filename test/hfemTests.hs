@@ -232,11 +232,14 @@ mesh1dElems = getMeshElements mesh1d
 mesh1dNodes = getMeshNodes mesh1d
 mesh2d = generateMesh (replicate 2 (0.0::Double)) (replicate 2 (1.0::Double)) [3,3] Element.StructElem
 mesh2dElems = getMeshElements mesh2d
+leftBndNodes = map (map nodeNumber . Element.getElementNodes) (head $ boundaryElements mesh2d)
 
 meshTests = testGroup "Mesh tests"
-  [ testCase "1d Element numbers"      $ assertEqual "returns [0,1]" [0,1] (map Element.getElementNumber mesh1dElems)
-  , testCase "1d Node numbers"         $ assertEqual "returns [0.0, 0.5, 1.0]" [0.0::Double, 0.5::Double, 1.0::Double] (concatMap nodeCoordinates mesh1dNodes)
-  , testCase "2d Element connectivity" $ assertEqual "returns first elem con" [0,1,4,3] (Element.getConnectivity (head mesh2dElems))
-  , testCase "2d Element connectivity" $ assertEqual "returns last elem con" [4,5,8,7] (Element.getConnectivity (last mesh2dElems))
+  [ testCase "1d element numbers"      $ assertEqual "returns [0,1]" [0,1] (map Element.getElementNumber mesh1dElems)
+  , testCase "1d node numbers"         $ assertEqual "returns [0.0, 0.5, 1.0]" [0.0::Double, 0.5::Double, 1.0::Double] (concatMap nodeCoordinates mesh1dNodes)
+  , testCase "1d boundary elements"    $ assertEqual "returns boundary elements" [[Element.StructElem [head mesh1dNodes] 0],[Element.StructElem [last mesh1dNodes] 1]] (boundaryElements mesh1d)
+  , testCase "2d element connectivity" $ assertEqual "returns first elem con" [0,1,4,3] (Element.getConnectivity (head mesh2dElems))
+  , testCase "2d element connectivity" $ assertEqual "returns last elem con" [4,5,8,7] (Element.getConnectivity (last mesh2dElems))
+  , testCase "2d boundary elements"    $ assertEqual "returns boundary elements" [[0,3],[3,6]] leftBndNodes
   ]
 
