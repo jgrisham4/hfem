@@ -1,8 +1,8 @@
-import Basis
-import Node
-import ShapeFcns
-import Element
-import Mesh
+import           Basis
+import           Element
+import           Mesh
+import           Node
+import           ShapeFcns
 
 linBasis   = Lagrange 1
 linShpFcn  = TensorProduct linBasis 1

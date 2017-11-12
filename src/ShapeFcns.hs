@@ -19,7 +19,7 @@ function number.  This is defined in the function shpFcnBasisMap.  Need to think
 mitigate this problem.  See the IrcLog in refs for discussion.
 -}
 
-import Basis
+import           Basis
 
 -- Need to define mapping from a to i or i,j or i,j,k
 -- ONLY WORKS FOR LINEAR BASIS
@@ -38,14 +38,9 @@ data NaturalSimplex b = NaturalSimplex b Int deriving (Show,Eq)
 -- to all shape functions.
 class ShapeFcn f where
 
-  -- Returns the order of the shape function
   getShapeFcnOrder :: Basis a => f a -> Int
-
-  -- Returns the dimension
-  getDimension :: Basis a => f a -> Int
-
-  -- Returns the basis which is used to build up the tensor product shape function
-  getBasis :: Basis a => f a -> a
+  getDimension     :: Basis a => f a -> Int
+  getBasis         :: Basis a => f a -> a
 
   -- Returns the value of the i-th shape function at the given (xi,eta,...) coords
   -- The last argument is number of derivatives. [1,0,0] = dn/dxi
@@ -56,6 +51,7 @@ class ShapeFcn f where
 
 -- ShapeFcn instance for tensor product shape functions
 instance ShapeFcn TensorProduct where
+
   getShapeFcnOrder (TensorProduct basis _) = basisOrder basis
   getDimension (TensorProduct _ dim) = dim
   getBasis (TensorProduct basis _) = basis
