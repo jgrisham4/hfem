@@ -8,9 +8,8 @@ module Element
 , computeJacobianDet
 ) where
 
---import Numeric.HMatrix
-import           Numeric.LinearAlgebra (Matrix, det, fromLists, tr, (<>))
-import qualified Numeric.LinearAlgebra as L
+import qualified Numeric.LinearAlgebra         as L
+import qualified Numeric.LinearAlgebra.HMatrix as HMat
 
 import           Basis
 import           Node
@@ -26,23 +25,25 @@ class Element e where
   getElementNodes    :: (Fractional a) => e a -> [Node a]
   getConnectivity    :: (Fractional a) => e a -> [Int]
   getElementNumber   :: (Fractional a) => e a -> Int
-  computeJacobian    :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a) => e a -> s b -> [a] -> Matrix a
+  computeJacobian    :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a) => e a -> s b -> [a] -> L.Matrix a
   computeJacobianDet :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a,L.Field a) => e a -> s b -> [a] -> a
-  --integrate          :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a) => e a -> s b -> Int -> [Int] -> Matrix a
+  dndx               :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a,L.Field a) => e a -> s b -> [a] -> Int -> L.Vector a
+  --integrate          :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a) => e a -> s b -> Int -> [Int] -> L.Matrix a
 
 
 instance Element StructElem where
-  getElementNodes (StructElem nodes _) = nodes
-  getConnectivity (StructElem nodes _) = map nodeNumber nodes
+  getElementNodes  (StructElem nodes _)   = nodes
+  getConnectivity  (StructElem nodes _)   = map nodeNumber nodes
   getElementNumber (StructElem _ elemNum) = elemNum
-  computeJacobian (StructElem nodes elemNum) shpFcn coords = matA <> matB
+  computeJacobian  (StructElem nodes elemNum) shpFcn coords = HMat.mul matA matB
     where
-      dim = getDimension shpFcn
-      matA = tr $ fromLists $ map (dndXi shpFcn coords) [0..(getShapeFcnOrder shpFcn + 1)^dim - 1]
-      matB = fromLists $ map nodeCoordinates nodes
-  computeJacobianDet (StructElem nodes elemNum) shpFcn coords = det $ computeJacobian (StructElem nodes elemNum) shpFcn coords
+      dim  = getDimension shpFcn
+      matA = L.tr $ L.fromLists $ map (dndXi shpFcn coords)
+        [0..(getShapeFcnOrder shpFcn + 1)^dim - 1]
+      matB = L.fromLists $ map nodeCoordinates nodes
+  computeJacobianDet (StructElem nodes elemNum) shpFcn coords =
+    L.det $ computeJacobian (StructElem nodes elemNum) shpFcn coords
+  dndx elem shpFcn coords idx = HMat.app (HMat.inv (computeJacobian elem shpFcn coords))
+    (L.fromList $ dndXi shpFcn coords idx)
 
   --integrate (StructElem nodes elemNum) shpFcn nGpts diff = zipWith (*)
-
-
-
