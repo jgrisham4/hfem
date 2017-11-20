@@ -25,8 +25,10 @@ import           Basis
 -- ONLY WORKS FOR LINEAR BASIS
 shpFcnBasisMap :: Int -> Int -> [Int]
 shpFcnBasisMap nodeNum 1 = [concat (replicate 2 [0, 1, 1, 0]) !! nodeNum]
-shpFcnBasisMap nodeNum 2 = shpFcnBasisMap nodeNum 1 ++ [concat (replicate 2 [0, 0, 1, 1]) !! nodeNum]
-shpFcnBasisMap nodeNum 3 = shpFcnBasisMap nodeNum 2 ++ [(replicate 4 0 ++ replicate 4 1) !! nodeNum]
+shpFcnBasisMap nodeNum 2 = shpFcnBasisMap nodeNum 1 ++
+  [concat (replicate 2 [0, 0, 1, 1]) !! nodeNum]
+shpFcnBasisMap nodeNum 3 = shpFcnBasisMap nodeNum 2 ++
+  [(replicate 4 0 ++ replicate 4 1) !! nodeNum]
 shpFcnBasisMap _ _ = error "Only defined for 0<=nodeNum<=7 and up to 3D."
 
 -- Shape function types (dependent upon basis used)
@@ -38,16 +40,16 @@ data NaturalSimplex b = NaturalSimplex b Int deriving (Show,Eq)
 -- to all shape functions.
 class ShapeFcn f where
 
-  getShapeFcnOrder :: Basis a => f a -> Int
-  getDimension     :: Basis a => f a -> Int
-  getBasis         :: Basis a => f a -> a
+  getShapeFcnOrder :: Basis b => f b -> Int
+  getDimension     :: Basis b => f b -> Int
+  getBasis         :: Basis b => f b -> a
 
   -- Returns the value of the i-th shape function at the given (xi,eta,...) coords
   -- The last argument is number of derivatives. [1,0,0] = dn/dxi
-  n :: (Basis a,Fractional c) => f a -> [c] -> Int -> [Int] -> c
+  n :: (Basis b,Fractional c) => f b -> [c] -> Int -> [Int] -> c
 
   -- Returns [dn_a/dxi, dn_a/deta, ... ]
-  dndXi :: (Basis a,Fractional c) => f a -> [c] -> Int -> [c]
+  dndXi :: (Basis b,Fractional c) => f b -> [c] -> Int -> [c]
 
 -- ShapeFcn instance for tensor product shape functions
 instance ShapeFcn TensorProduct where
@@ -56,9 +58,17 @@ instance ShapeFcn TensorProduct where
   getDimension (TensorProduct _ dim) = dim
   getBasis (TensorProduct basis _) = basis
 
-  n (TensorProduct basis 1  ) coords a deriv = psi basis (last coords) (last (shpFcnBasisMap a 1)) (last deriv)
-  n (TensorProduct basis dim) coords a deriv = psi basis (last coords) (last (shpFcnBasisMap a dim)) (last deriv) * n (TensorProduct basis (dim-1)) (take (dim-1) coords) a (take (dim-1) deriv)
+  n (TensorProduct basis 1  ) coords a deriv =
+    psi basis (last coords) (last (shpFcnBasisMap a 1)) (last deriv)
+  n (TensorProduct basis dim) coords a deriv =
+    psi basis (last coords) (last (shpFcnBasisMap a dim)) (last deriv) *
+    n (TensorProduct basis (dim-1)) (take (dim-1) coords) a (take (dim-1) deriv)
 
   dndXi (TensorProduct basis 1) coords a = [n (TensorProduct basis 1) coords a [1]]
-  dndXi (TensorProduct basis 2) coords a = [n (TensorProduct basis 2) coords a [1,0], n (TensorProduct basis 2) coords a [0,1]]
-  dndXi (TensorProduct basis 3) coords a = [n (TensorProduct basis 3) coords a [1,0,0], n (TensorProduct basis 3) coords a [0,1,0],n (TensorProduct basis 3) coords a [0,0,1]]
+  dndXi (TensorProduct basis 2) coords a =
+    [n (TensorProduct basis 2) coords a [1,0],
+     n (TensorProduct basis 2) coords a [0,1]]
+  dndXi (TensorProduct basis 3) coords a =
+    [n (TensorProduct basis 3) coords a [1,0,0],
+     n (TensorProduct basis 3) coords a [0,1,0],
+     n (TensorProduct basis 3) coords a [0,0,1]]

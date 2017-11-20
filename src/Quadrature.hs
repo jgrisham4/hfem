@@ -1,6 +1,4 @@
-module Quadrature
-(
-) where
+module Quadrature (getGaussPoints) where
 
 -- Function for getting Gauss points for integration
 -- Given the number of points it returns a list of the points and the weights
