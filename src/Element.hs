@@ -16,6 +16,10 @@ import           Node
 import           ShapeFcns
 import Quadrature
 
+-- Utility functions
+allCombinations :: [Int] -> [[Int]]
+allCombinations x = mapM (const x) [1..(length x)]
+
 -- Element types
 data StructElem a = StructElem [Node a] Int deriving (Show,Eq)
 data Tri a        = Tri        [Node a] Int deriving (Show,Eq)
@@ -59,9 +63,11 @@ instance Element StructElem where
   -- I need to figure out what gpt is.  Given some Gauss points, say [0,1], I need to figure out
   -- how to create a list which represents all combinations of these values.
   -- takes [0,1] and returns [[0,0],[0,1],[1,0],[1,1]]
-  innerProduct (StructElem nodes elemNum) shpFcn deriv ngpts = [[n shpFcn (gpt) i (fst deriv) * n shpFcn (gpt) j (snd deriv) | i <- [0..(nn-1)]] | j <- [0..(nn-1)]]
+  innerProduct (StructElem nodes elemNum) shpFcn deriv ngpts =
     where
-      nn = length nodes
-      gdata = getGaussPoints ngpts
-      gpts  = fst gdata
-      gwts  = snd gdata
+      nn     = length nodes
+      gdata  = getGaussPoints ngpts
+      gpts1d = fst gdata
+      gwts1d = snd gdata
+      integrand coords = [[n shpFcn coords i (fst deriv) * n shpFcn coords j (snd deriv) | i <- [0..(nn-1)]] | j <- [0..(nn-1)]]
+      gpts   = 
