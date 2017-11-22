@@ -13,12 +13,14 @@ import qualified Numeric.LinearAlgebra.HMatrix as HMat
 
 import           Basis
 import           Node
+import           Quadrature
 import           ShapeFcns
-import Quadrature
 
 -- Utility functions
 allCombinations :: [Int] -> [[Int]]
 allCombinations x = mapM (const x) [1..(length x)]
+zeros :: (Num a,HMat.Element a) => Int -> HMat.Matrix a
+zeros sz = HMat.fromLists [[0 | i <- [0..(sz-1)]] | j <- [0..(sz-1)]]
 
 -- Element types
 data StructElem a = StructElem [Node a] Int deriving (Show,Eq)
@@ -28,8 +30,10 @@ data Tri a        = Tri        [Node a] Int deriving (Show,Eq)
 
 class Element e where
   getElementNodes    :: (Fractional a) => e a -> [Node a]
+  getNumNodes        :: (Fractional a) => e a -> Int
   getConnectivity    :: (Fractional a) => e a -> [Int]
   getElementNumber   :: (Fractional a) => e a -> Int
+  getElementNumbor   :: (Fractional a) => e a -> Int
   computeJacobian    :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a) => e a -> s b -> [a] -> L.Matrix a
   computeJacobianDet :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a,L.Field a) => e a -> s b -> [a] -> a
   dndx               :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a,L.Field a) => e a -> s b -> [a] -> Int -> L.Vector a
@@ -63,11 +67,13 @@ instance Element StructElem where
   -- I need to figure out what gpt is.  Given some Gauss points, say [0,1], I need to figure out
   -- how to create a list which represents all combinations of these values.
   -- takes [0,1] and returns [[0,0],[0,1],[1,0],[1,1]]
-  innerProduct (StructElem nodes elemNum) shpFcn deriv ngpts =
+  innerProduct (StructElem nodes elemNum) shpFcn deriv ngpts = foldr (+) (zeros nn) sampledMats
     where
       nn     = length nodes
       gdata  = getGaussPoints ngpts
       gpts1d = fst gdata
       gwts1d = snd gdata
-      integrand coords = [[n shpFcn coords i (fst deriv) * n shpFcn coords j (snd deriv) | i <- [0..(nn-1)]] | j <- [0..(nn-1)]]
-      gpts   = 
+      integrand coords = HMat.fromLists [[n shpFcn coords i (fst deriv) * n shpFcn coords j (snd deriv) | i <- [0..(nn-1)]] | j <- [0..(nn-1)]]
+      gpts   = allCombinations gpts1d
+      gwts   = allCombinations gwts1d
+      sampledMats = zipWith (*) gwts (map integrand gpts)

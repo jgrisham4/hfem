@@ -42,7 +42,7 @@ class ShapeFcn f where
 
   getShapeFcnOrder :: Basis b => f b -> Int
   getDimension     :: Basis b => f b -> Int
-  getBasis         :: Basis b => f b -> a
+  getBasis         :: Basis b => f b -> b
 
   -- Returns the value of the i-th shape function at the given (xi,eta,...) coords
   -- The last argument is number of derivatives. [1,0,0] = dn/dxi
