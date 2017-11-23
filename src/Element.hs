@@ -37,14 +37,6 @@ class Element e where
   computeJacobian    :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a) => e a -> s b -> [a] -> L.Matrix a
   computeJacobianDet :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a,L.Field a) => e a -> s b -> [a] -> a
   dndx               :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a,L.Field a) => e a -> s b -> [a] -> Int -> L.Vector a
-  --integrate          :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a) => e a -> s b -> Int -> [Int] -> L.Matrix a
-
-  -- Method for an inner product over an element
-  -- What do I need to compute an inner product?  I need the shape functions to be integrated,
-  -- I need the order of differentiation of each of the two terms.  I also need the number of
-  -- Gauss points.
-  innerProduct :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a,L.Field a) => e a -> s b -> (Int,Int) -> Int -> L.Matrix a
-
 
 instance Element StructElem where
   getElementNodes  (StructElem nodes _)   = nodes
@@ -63,17 +55,3 @@ instance Element StructElem where
 
   dndx elem shpFcn coords idx = HMat.app (HMat.inv (computeJacobian elem shpFcn coords))
     (L.fromList $ dndXi shpFcn coords idx)
-
-  -- The problem is with the differentiation in this method.  I need to find some way
-  -- to sum derivatives.
-  innerProduct (StructElem nodes elemNum) shpFcn deriv ngpts = sum sampledMats
-    where
-      nn     = length nodes
-      gdata  = getGaussPoints ngpts
-      gpts1d = fst gdata
-      gwts1d = snd gdata
-      iDeriv = []
-      integrand coords = L.fromLists [[n shpFcn coords i (fst deriv) * n shpFcn coords j (snd deriv) | i <- [0..(nn-1)]] | j <- [0..(nn-1)]]
-      gpts   = allCombinations gpts1d
-      gwts   = allCombinations gwts1d
-      sampledMats = zipWith (*) (map product gwts) (map integrand gpts)
