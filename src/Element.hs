@@ -33,7 +33,6 @@ class Element e where
   getNumNodes        :: (Fractional a) => e a -> Int
   getConnectivity    :: (Fractional a) => e a -> [Int]
   getElementNumber   :: (Fractional a) => e a -> Int
-  getElementNumbor   :: (Fractional a) => e a -> Int
   computeJacobian    :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a) => e a -> s b -> [a] -> L.Matrix a
   computeJacobianDet :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a,L.Field a) => e a -> s b -> [a] -> a
   dndx               :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a,L.Field a) => e a -> s b -> [a] -> Int -> L.Vector a

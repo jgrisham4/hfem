@@ -18,7 +18,7 @@ executable hfem
   main-is          : Main.hs
   default-language : Haskell2010
   build-depends    : base >= 4.7 && < 5,hmatrix
-  other-modules    : Basis,ShapeFcns,Element,Node,Mesh
+  other-modules    : Basis,ShapeFcns,Element,Node,Mesh,Quadrature
 
 --library
 --  hs-source-dirs   : src
@@ -32,4 +32,4 @@ test-suite unit-tests
   main-is          : hfemTests.hs
   default-language : Haskell2010
   build-depends    : base,tasty,tasty-hunit,tasty-jenkins-xml,hmatrix
-  other-modules    : Basis,ShapeFcns,Node,Element,Mesh
+  other-modules    : Basis,ShapeFcns,Node,Element,Mesh,Quadrature
