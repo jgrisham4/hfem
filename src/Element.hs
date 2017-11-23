@@ -19,8 +19,8 @@ import           ShapeFcns
 -- Utility functions
 allCombinations :: [Int] -> [[Int]]
 allCombinations x = mapM (const x) [1..(length x)]
-zeros :: (Num a,HMat.Element a) => Int -> HMat.Matrix a
-zeros sz = HMat.fromLists [[0 | i <- [0..(sz-1)]] | j <- [0..(sz-1)]]
+constMat :: (Num a,L.Element a) => Int -> a -> L.Matrix a
+constMat sz val = L.fromLists [[val | i <- [0..(sz-1)]] | j <- [0..(sz-1)]]
 
 -- Element types
 data StructElem a = StructElem [Node a] Int deriving (Show,Eq)
@@ -64,16 +64,16 @@ instance Element StructElem where
   dndx elem shpFcn coords idx = HMat.app (HMat.inv (computeJacobian elem shpFcn coords))
     (L.fromList $ dndXi shpFcn coords idx)
 
-  -- I need to figure out what gpt is.  Given some Gauss points, say [0,1], I need to figure out
-  -- how to create a list which represents all combinations of these values.
-  -- takes [0,1] and returns [[0,0],[0,1],[1,0],[1,1]]
-  innerProduct (StructElem nodes elemNum) shpFcn deriv ngpts = foldr (+) (zeros nn) sampledMats
+  -- The problem is with the differentiation in this method.  I need to find some way
+  -- to sum derivatives.
+  innerProduct (StructElem nodes elemNum) shpFcn deriv ngpts = sum sampledMats
     where
       nn     = length nodes
       gdata  = getGaussPoints ngpts
       gpts1d = fst gdata
       gwts1d = snd gdata
-      integrand coords = HMat.fromLists [[n shpFcn coords i (fst deriv) * n shpFcn coords j (snd deriv) | i <- [0..(nn-1)]] | j <- [0..(nn-1)]]
+      iDeriv = []
+      integrand coords = L.fromLists [[n shpFcn coords i (fst deriv) * n shpFcn coords j (snd deriv) | i <- [0..(nn-1)]] | j <- [0..(nn-1)]]
       gpts   = allCombinations gpts1d
       gwts   = allCombinations gwts1d
-      sampledMats = zipWith (*) gwts (map integrand gpts)
+      sampledMats = zipWith (*) (map product gwts) (map integrand gpts)
