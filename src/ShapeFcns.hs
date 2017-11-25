@@ -45,7 +45,7 @@ class ShapeFcn f where
   getBasis         :: Basis b => f b -> b
 
   -- Returns the value of the i-th shape function at the given (xi,eta,...) coords
-  -- The last argument is number of derivatives. [1,0,0] = dn/dxi
+  -- The last argument is number of derivatives. [1,0,0] = dn/dxi, [0,0,1] = dn/dzeta
   n :: (Basis b,Fractional c) => f b -> [c] -> Int -> [Int] -> c
 
   -- Returns [dn_a/dxi, dn_a/deta, ... ]

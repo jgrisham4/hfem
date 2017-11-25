@@ -1,11 +1,15 @@
+{-# LANGUAGE ConstraintKinds #-}
+
 module Element
 ( Element
 , StructElem(..)
 , getElementNodes
+, getNumNodes
 , getConnectivity
 , getElementNumber
 , computeJacobian
 , computeJacobianDet
+, dndx
 ) where
 
 import qualified Numeric.LinearAlgebra         as L
@@ -19,8 +23,9 @@ import           ShapeFcns
 -- Utility functions
 allCombinations :: [Int] -> [[Int]]
 allCombinations x = mapM (const x) [1..(length x)]
-constMat :: (Num a,L.Element a) => Int -> a -> L.Matrix a
-constMat sz val = L.fromLists [[val | i <- [0..(sz-1)]] | j <- [0..(sz-1)]]
+
+-- Synonym for types required by HMatrix
+type FracElNum a = (Fractional a, L.Element a, L.Numeric a)
 
 -- Element types
 data StructElem a = StructElem [Node a] Int deriving (Show,Eq)
@@ -33,9 +38,9 @@ class Element e where
   getNumNodes        :: (Fractional a) => e a -> Int
   getConnectivity    :: (Fractional a) => e a -> [Int]
   getElementNumber   :: (Fractional a) => e a -> Int
-  computeJacobian    :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a) => e a -> s b -> [a] -> L.Matrix a
-  computeJacobianDet :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a,L.Field a) => e a -> s b -> [a] -> a
-  dndx               :: (Basis b,ShapeFcn s,Fractional a,L.Element a,L.Numeric a,L.Field a) => e a -> s b -> [a] -> Int -> L.Vector a
+  computeJacobian    :: (Basis b,ShapeFcn s,FracElNum a) => e a -> s b -> [a] -> L.Matrix a
+  computeJacobianDet :: (Basis b,ShapeFcn s,FracElNum a,L.Field a) => e a -> s b -> [a] -> a
+  dndx               :: (Basis b,ShapeFcn s,FracElNum a,L.Field a) => e a -> s b -> [a] -> Int -> L.Vector a
 
 instance Element StructElem where
   getElementNodes  (StructElem nodes _)   = nodes
