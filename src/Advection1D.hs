@@ -7,6 +7,7 @@ import qualified Basis
 import           Data.List
 import qualified Element
 import           Numeric.LinearAlgebra.HMatrix
+import           Quadrature                    (integrate)
 import qualified ShapeFcns
 
 -- Synonym for numeric/fractional constraints
@@ -30,8 +31,8 @@ massIntegrand elem shpFcn xi = fromLists [[
 
 -- Element mass and stiffness matrices
 -- Must multiply by the determinant of the Jacobian here!!!
-elemMatrices :: (Element.Element e,ShapeFcns.ShapeFcn s,Basis.Basis b,FrElNuFi a) => e a -> s b -> [a] -> (Matrix a,Matrix a)
-elemMatrices elem shpFcn xi = (stiffnessMat, massMat)
+elemMatrices :: (Element.Element e,ShapeFcns.ShapeFcn s,Basis.Basis b,FrElNuFi a) => e a -> s b -> Int -> [a] -> (Matrix a,Matrix a)
+elemMatrices elem shpFcn ngpts xi = (stiffnessMat, massMat)
   where
-    stiffnessMat = []
-    massMat = []
+    stiffnessMat = integrate 1 ngpts (stiffnessIntegrand elem shpFcn)
+    massMat = integrate 1 ngpts (massIntegrand elem shpFcn)
