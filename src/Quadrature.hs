@@ -3,6 +3,7 @@
 module Quadrature
 ( getGaussPoints
 , integrate
+, integrateFunc
 ) where
 
 import qualified Numeric.LinearAlgebra.HMatrix as HMat
@@ -21,10 +22,17 @@ getGaussPoints _ = error "Gauss points only up to 3 point quadrature available."
 -- Function for integrating some integrand over an element
 -- Usage: integrate dim ngpts integrand
 integrate :: FrElNuFi a => Int -> Int -> ([a] -> HMat.Matrix a) -> HMat.Matrix a
-integrate 1 ngpts integrand = foldl1 HMat.add $ zipWith HMat.scale wts (map integrand [xi])
+integrate 1 ngpts integrand = foldl1 HMat.add $ zipWith HMat.scale wts (map (\x -> integrand [x]) xi)
   where
     gpts = getGaussPoints ngpts
     xi = fst gpts
     wts = snd gpts
 integrate _ _ _ = error "Integration only works in 1d for now."
 
+-- Function for integrating a function from -1 to 1
+integrateFunc :: Floating a => Int -> (a -> a) -> a
+integrateFunc ngpts func = sum $ zipWith (*) wts (map func pts)
+  where
+    gpts = getGaussPoints ngpts
+    pts = fst gpts
+    wts = snd gpts

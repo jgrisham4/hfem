@@ -22,7 +22,7 @@ stiffnessIntegrand :: (Element.Element e,ShapeFcns.ShapeFcn s,Basis.Basis b,FrEl
 --  ShapeFcns.n shpFcn xi i [0] * atIndex (Element.dndx elem shpFcn xi j) 0 * Element.computeJacobianDet elem shpFcn xi
 --  | i <- idxRange] | j <- idxRange]
 stiffnessIntegrand elem shpFcn xi = fromLists [[
-  (atIndex (Element.dndx elem shpFcn xi i) 0 * atIndex (Element.dndx elem shpFcn xi j) 0 - ShapeFcns.n shpFcn xi i [0] * ShapeFcns.n shpFcn xi j [0]) * Element.computeJacobianDet elem shpFcn xi
+  (atIndex (Element.dndx elem shpFcn xi i) 0 * atIndex (Element.dndx elem shpFcn xi j) 0 + ShapeFcns.n shpFcn xi i [0] * ShapeFcns.n shpFcn xi j [0]) * Element.computeJacobianDet elem shpFcn xi
   | i <- idxRange] | j <- idxRange]
   where
     idxRange = [0..(Element.getNumNodes elem - 1)]

@@ -1,1 +1,3 @@
-There's a problem with the quadrature.  When I use more than one point quadrature, the answer doesn't seem correct.
+Problem with the quadrature is fixed.  Now need to create a mesh, and assemble global matrices.
+After that, I need to add the fluxes and solve the linear system.  Also going to need to develop
+or use a ode solver.
