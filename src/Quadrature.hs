@@ -15,7 +15,7 @@ type FlElNuFi a = (Floating a,HMat.Element a,HMat.Numeric a,HMat.Field a)
 getGaussPoints :: Floating a => Int -> ([a], [a])
 getGaussPoints 1 = ([0.0], [2.0])
 getGaussPoints 2 = ([-1.0/sqrt 3.0, 1.0/sqrt 3.0], [1.0, 1.0])
-getGaussPoints 3 = ([-sqrt 0.6, 0.0, sqrt 0.6], [5.0/9.0, 8.0/9.0, 5.0/9.0])
+getGaussPoints 3 = ([-sqrt (3.0/5.0), 0.0, sqrt (3.0/5.0)], [5.0/9.0, 8.0/9.0, 5.0/9.0])
 getGaussPoints _ = error "Gauss points only up to 3 point quadrature available."
 
 -- Function for integrating some integrand over an element
