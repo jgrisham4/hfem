@@ -9,6 +9,7 @@ where
 import qualified Basis
 import           Data.List
 import qualified Element
+import           Mesh
 import           Numeric.LinearAlgebra.HMatrix
 import           Quadrature                    (integrate)
 import qualified ShapeFcns
@@ -42,3 +43,6 @@ elemMatrices elem shpFcn ngpts = (stiffnessMat, massMat)
   where
     stiffnessMat = integrate 1 ngpts (stiffnessIntegrand elem shpFcn)
     massMat      = integrate 1 ngpts (massIntegrand elem shpFcn)
+
+-- Function for assembling global matrices
+--assembleGlobalMatrices ::(Element.Element e, FrElNuFi a) => Mesh e a
