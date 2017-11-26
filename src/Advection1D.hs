@@ -1,6 +1,9 @@
 {-# LANGUAGE ConstraintKinds #-}
 
 module Advection1D
+(
+elemMatrices
+)
 where
 
 import qualified Basis
@@ -15,8 +18,11 @@ type FrElNuFi a = (Fractional a,Element a,Numeric a,Field a)
 
 -- Element stiffness integrand
 stiffnessIntegrand :: (Element.Element e,ShapeFcns.ShapeFcn s,Basis.Basis b,FrElNuFi a) => e a -> s b -> [a] -> Matrix a
+--stiffnessIntegrand elem shpFcn xi = fromLists [[
+--  ShapeFcns.n shpFcn xi i [0] * atIndex (Element.dndx elem shpFcn xi j) 0 * Element.computeJacobianDet elem shpFcn xi
+--  | i <- idxRange] | j <- idxRange]
 stiffnessIntegrand elem shpFcn xi = fromLists [[
-  ShapeFcns.n shpFcn xi i [0] * atIndex (Element.dndx elem shpFcn xi j) 0 * Element.computeJacobianDet elem shpFcn xi
+  (atIndex (Element.dndx elem shpFcn xi i) 0 * atIndex (Element.dndx elem shpFcn xi j) 0 - ShapeFcns.n shpFcn xi i [0] * ShapeFcns.n shpFcn xi j [0]) * Element.computeJacobianDet elem shpFcn xi
   | i <- idxRange] | j <- idxRange]
   where
     idxRange = [0..(Element.getNumNodes elem - 1)]
@@ -31,8 +37,8 @@ massIntegrand elem shpFcn xi = fromLists [[
 
 -- Element mass and stiffness matrices
 -- Must multiply by the determinant of the Jacobian here!!!
-elemMatrices :: (Element.Element e,ShapeFcns.ShapeFcn s,Basis.Basis b,FrElNuFi a) => e a -> s b -> Int -> [a] -> (Matrix a,Matrix a)
-elemMatrices elem shpFcn ngpts xi = (stiffnessMat, massMat)
+elemMatrices :: (Element.Element e,ShapeFcns.ShapeFcn s,Basis.Basis b,FrElNuFi a) => e a -> s b -> Int -> (Matrix a,Matrix a)
+elemMatrices elem shpFcn ngpts = (stiffnessMat, massMat)
   where
     stiffnessMat = integrate 1 ngpts (stiffnessIntegrand elem shpFcn)
-    massMat = integrate 1 ngpts (massIntegrand elem shpFcn)
+    massMat      = integrate 1 ngpts (massIntegrand elem shpFcn)

@@ -1,3 +1,4 @@
+import           Advection1D
 import           Basis
 import           Element
 import           Mesh
@@ -7,7 +8,7 @@ import           ShapeFcns
 linBasis   = Lagrange 1
 linShpFcn  = TensorProduct linBasis 1
 linShpFcn2 = TensorProduct linBasis 2
-nodes      = [Node 0 [0.0], Node 1 [0.5]]
+nodes      = [Node 0 [0.0], Node 1 [0.25]]
 nodes2d    = [Node 0 [-1.0, -1.0], Node 1 [1.0, -1.0], Node 2 [1.0, 1.0], Node 3 [-1.0, 1.0]]
 lineElem   = StructElem nodes 0
 quadElem   = StructElem nodes2d 0
@@ -18,3 +19,4 @@ main = do
   print $ show $ computeJacobianDet lineElem linShpFcn [0.0 :: Double]
   print $ show quadElem
   print $ show $ boundaryElements mesh2D !! 2
+  print $ fst $ elemMatrices lineElem linShpFcn 1
