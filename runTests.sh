@@ -1,3 +1,3 @@
 #!/bin/bash
 
-stack test --ta "--jxml testResults.xml"
+stack --allow-different-user test --ta "--jxml testResults.xml"
