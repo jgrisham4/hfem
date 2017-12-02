@@ -14,9 +14,12 @@ lineElem   = StructElem nodes 0
 quadElem   = StructElem nodes2d 0
 someCoords = [0.0, 0.0]
 mesh2D     = generateMesh [0.0, 0.0] [1.0, 1.0] [3, 3] StructElem
+mesh1D     = generateMesh [0.0] [1.0] [6] StructElem
+meshDiscon = genDMesh 0.0 1.0 11 StructElem
 
 main = do
   print $ computeJacobian lineElem linShpFcn [0.0 :: Double]
   print $ show quadElem
   print $ show $ boundaryElements mesh2D !! 2
   print $ map (fst . elemMatrices lineElem linShpFcn) [1,2,3]
+  writeMesh meshDiscon "mesh.dat"

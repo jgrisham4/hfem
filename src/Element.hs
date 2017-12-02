@@ -38,6 +38,7 @@ class Element e where
   getNumNodes        :: (Fractional a) => e a -> Int
   getConnectivity    :: (Fractional a) => e a -> [Int]
   getElementNumber   :: (Fractional a) => e a -> Int
+  faceNormals        :: (Fractional a) => e a -> Int -> [a]
   computeJacobian    :: (Basis b,ShapeFcn s,FracElNum a) => e a -> s b -> [a] -> L.Matrix a
   computeJacobianDet :: (Basis b,ShapeFcn s,FracElNum a,L.Field a) => e a -> s b -> [a] -> a
   dndx               :: (Basis b,ShapeFcn s,FracElNum a,L.Field a) => e a -> s b -> [a] -> Int -> L.Vector a
@@ -59,3 +60,6 @@ instance Element StructElem where
 
   dndx elem shpFcn coords idx = HMat.app (HMat.inv (computeJacobian elem shpFcn coords))
     (L.fromList $ dndXi shpFcn coords idx)
+
+  faceNormals (StructElem nodes elemNum) 1 = [-1.0, 1.0]  -- Specialized for linear elements
+  faceNormals _ _ = error "Face normals can only be computed for 1D elements for now."

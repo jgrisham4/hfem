@@ -19,7 +19,7 @@ tau=2*pi();
 %--Let u(.,0) = u0 = sin(2pi * x)
 
 %--Let vh be the finite vector space of linear polynomials
-%--Let uh be the approximate numerical solution consisting of a linear 
+%--Let uh be the approximate numerical solution consisting of a linear
 %combination of basis functions (\thetaN for the Nth basis) in vh with
 %scalar coefficients BasisWeightN (i.e. \sum BasisWeightN \thetaN)
 %--Let \phiN be the Nth test function in the same vector space as the basis

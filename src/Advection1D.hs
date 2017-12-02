@@ -9,6 +9,7 @@ where
 import qualified Basis
 import           Data.List
 import qualified Element
+import           Flux
 import           Mesh
 import           Numeric.LinearAlgebra.HMatrix
 import           Quadrature                    (integrate)
@@ -43,6 +44,10 @@ elemMatrices elem shpFcn ngpts = (stiffnessMat, massMat)
   where
     stiffnessMat = integrate 1 ngpts (stiffnessIntegrand elem shpFcn)
     massMat      = integrate 1 ngpts (massIntegrand elem shpFcn)
+
+-- Function which computes the dimensions of the global matrices
+globalMatrixDimension :: Int -> Int
+globalMatrixDimension numNodes = 2 * numNodes - 2
 
 -- Function for assembling global matrices
 --assembleGlobalMatrices ::(Element.Element e, FrElNuFi a) => Mesh e a
