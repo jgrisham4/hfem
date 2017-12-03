@@ -4,6 +4,7 @@ module Mesh
 , belemNodeNums
 , getMeshElements
 , getMeshNodes
+, globalNodeNum
 , generateMesh
 , genDMesh
 , nodesFromCoords
@@ -33,6 +34,10 @@ getMeshElements (Mesh elems _) = elems
 -- Function for getting nodes from a mesh
 getMeshNodes :: (Fractional a,Eq a,Element e) => Mesh e a -> [Node a]
 getMeshNodes (Mesh elems _) = nub $ concatMap getElementNodes elems
+
+-- Function for building the local to global mapping -- specialized for 1d
+globalNodeNum :: Int -> Int -> Int
+globalNodeNum globalElemNum localNodeNum = 2 * globalElemNum + localNodeNum
 
 -- Writes a mesh to a file.
 writeMesh :: (Show a,Fractional a,Eq a,Element e) => Mesh e a -> String -> IO()

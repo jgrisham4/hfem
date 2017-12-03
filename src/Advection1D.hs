@@ -49,5 +49,9 @@ elemMatrices elem shpFcn ngpts = (stiffnessMat, massMat)
 globalMatrixDimension :: Int -> Int
 globalMatrixDimension numNodes = 2 * numNodes - 2
 
+-- Function which takes a local element matrix and transforms it to global
+--localMatToGlobal :: FrElNuFi a => Matrix a -> Int -> [((Int, Int), a)]
+--localMatToGlobal
+
 -- Function for assembling global matrices
 --assembleGlobalMatrices ::(Element.Element e, FrElNuFi a) => Mesh e a
