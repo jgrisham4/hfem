@@ -16,6 +16,7 @@ someCoords = [0.0, 0.0]
 mesh2D     = generateMesh [0.0, 0.0] [1.0, 1.0] [3, 3] StructElem
 mesh1D     = generateMesh [0.0] [1.0] [6] StructElem
 meshDiscon = genDMesh 0.0 1.0 11 StructElem
+lineElemMats = elemMatrices lineElem linShpFcn 1
 
 main = do
   print $ computeJacobian lineElem linShpFcn [0.0 :: Double]

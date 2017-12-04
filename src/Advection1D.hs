@@ -1,9 +1,6 @@
 {-# LANGUAGE ConstraintKinds #-}
 
 module Advection1D
-(
-elemMatrices
-)
 where
 
 import qualified Basis
@@ -49,9 +46,12 @@ elemMatrices elem shpFcn ngpts = (stiffnessMat, massMat)
 globalMatrixDimension :: Int -> Int
 globalMatrixDimension numNodes = 2 * numNodes - 2
 
--- Function which takes a local element matrix and transforms it to global
---localMatToGlobal :: FrElNuFi a => Matrix a -> Int -> [((Int, Int), a)]
---localMatToGlobal
+-- Function which takes a local element matrix along with an element and transforms it to global
+localMatToGlobal :: (Element.Element e,FrElNuFi a) => e a -> Matrix a -> [((Int, Int), a)]
+localMatToGlobal elem elemMat = concat [[((Mesh.globalNodeNum en i, Mesh.globalNodeNum en j), atIndex elemMat (i,j) ) | i <- [0..dim-1]] | j <- [0..dim-1]]
+  where
+    en = Element.getElementNumber elem
+    dim = (fst . size) elemMat
 
 -- Function for assembling global matrices
 --assembleGlobalMatrices ::(Element.Element e, FrElNuFi a) => Mesh e a
