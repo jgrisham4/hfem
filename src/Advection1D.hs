@@ -53,5 +53,16 @@ localMatToGlobal elem elemMat = concat [[((Mesh.globalNodeNum en i, Mesh.globalN
     en = Element.getElementNumber elem
     dim = (fst . size) elemMat
 
--- Function for assembling global matrices
---assembleGlobalMatrices ::(Element.Element e, FrElNuFi a) => Mesh e a
+-- Function which assembles global stiffness and mass matrices
+-- This function takes a mesh and returns a tuple which corresponds to the
+-- global stiffness and global mass matrices, respectively.
+-- THIS ONLY WORKS WITH THE DISCONTINUOUS MESH...  IT DOES NOT SUM DUPLICATE ENTRIES.
+assembleGlobalMatrices :: (Element.Element e, ShapeFcns.ShapeFcn s,Basis.Basis b, FrElNuFi a) => Mesh e a -> s b -> Int -> ([((Int,Int),a)],[((Int,Int),a)])
+assembleGlobalMatrices grid shpFcn ngpts = (globalK, globalM)
+  where
+    elems = Mesh.getMeshElements grid
+    elemMats = map (\elem -> elemMatrices elem shpFcn ngpts) elems
+    elemK = map fst elemMats
+    elemM = map snd elemMats
+    globalK = concat (zipWith localMatToGlobal elems elemK)
+    globalM = concat (zipWith localMatToGlobal elems elemM)

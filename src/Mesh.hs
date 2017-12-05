@@ -15,7 +15,6 @@ module Mesh
 ) where
 
 import           Data.List (nub)
-
 import           Element
 import           Node
 
