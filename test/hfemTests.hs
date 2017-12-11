@@ -1,12 +1,12 @@
-import Test.Tasty
-import Test.Tasty.HUnit
-import Test.Tasty.Runners.JenkinsXML (jenkinsXMLRunner)
+import           Test.Tasty
+import           Test.Tasty.HUnit
+import           Test.Tasty.Runners.JenkinsXML (jenkinsXMLRunner)
 
-import Basis
-import ShapeFcns
-import Node
+import           Basis
 import qualified Element
-import Mesh
+import           Mesh
+import           Node
+import           ShapeFcns
 
 
 -- Main
@@ -211,9 +211,13 @@ nodeTests = testGroup "Node tests"
 nodes1d = [Node 0 [-1.0], Node 1 [1.0]]
 nodes2d = [Node 0 [-1.0, -1.0], Node 1 [1.0, -1.0], Node 2 [1.0, 1.0], Node 3 [-1.0, 1.0]]
 nodes2d' = [Node 0 [0.0, 0.0], Node 1 [1.0, 0.0], Node 2 [1.0, 1.0], Node 3 [0.0, 1.0]]
+nodes3d = [Node 0 [-1.0,-1.0,-1.0], Node 1 [1.0,-1.0,-1.0], Node 2 [1.0,1.0,-1.0], Node 3 [-1.0,1.0,-1.0],Node 4 [-1.0,-1.0,1.0], Node 5 [1.0,-1.0,1.0], Node 6 [1.0,1.0,1.0], Node 7 [-1.0,1.0,1.0]]
+nodes3d' = [Node 0 [0.0,0.0,0.0], Node 1 [1.0,0.0,0.0], Node 2 [1.0,1.0,0.0], Node 3 [0.0,1.0,0.0],Node 4 [0.0,0.0,1.0], Node 5 [1.0,0.0,1.0], Node 6 [1.0,1.0,1.0], Node 7 [0.0,1.0,1.0]]
 lineElem = Element.StructElem nodes1d 0
 quadElem = Element.StructElem nodes2d 0
 quadElem' = Element.StructElem nodes2d' 0
+hexElem = Element.StructElem nodes3d 0
+hexElem' = Element.StructElem nodes3d' 0
 
 elemTests = testGroup "Element tests"
   [ testCase "1d element number"       $ assertEqual "returns 0"    (Element.getElementNumber lineElem) (0 :: Int)
@@ -221,6 +225,8 @@ elemTests = testGroup "Element tests"
   , testCase "2d element number"       $ assertEqual "returns 0"    (Element.getElementNumber quadElem) (0 :: Int)
   , testCase "2d Jacobian Determinant" $ assertEqual "returns 1"    (Element.computeJacobianDet quadElem tp2 [0.0 :: Double, 0.0 :: Double]) (1.0 :: Double)
   , testCase "2d Jacobian Determinant" $ assertEqual "returns 0.25" (Element.computeJacobianDet quadElem' tp2 [0.0 :: Double, 0.0 :: Double]) (0.25 :: Double)
+  , testCase "3d Jacobian Determinant" $ assertEqual "returns 1"    (Element.computeJacobianDet hexElem tp3 [0.0,0.0,0.0]) (1.0::Double)
+  , testCase "3d Jacobian Determinant" $ assertEqual "returns 1/8"  (Element.computeJacobianDet hexElem' tp3 [0.0,0.0,0.0]) (1.0 / 8.0 :: Double)
   ]
 
 -----------------------------------------------------------
