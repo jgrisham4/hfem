@@ -34,6 +34,11 @@ massIntegrand elem shpFcn xi = fromLists [[
   where
     idxRange = [0..(ShapeFcns.getShapeFcnOrder shpFcn)]
 
+-- Computes the element flux matrix assuming an upwind flux.
+-- Assumes that advSpeed is positive.
+elemFluxMatrix :: FrElNuFi a => a -> Matrix a
+elemFluxMatrix advSpeed = scale advSpeed $ fromLists [[-1.0, 0.0, 0.0],[0.0, 0.0, 1.0]]
+
 -- Element mass and stiffness matrices
 -- Must multiply by the determinant of the Jacobian here!!!
 elemMatrices :: (Element.Element e,ShapeFcns.ShapeFcn s,Basis.Basis b,FrElNuFi a) => e a -> s b -> Int -> (Matrix a,Matrix a)

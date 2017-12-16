@@ -1,3 +1,2 @@
-Problem with the quadrature is fixed.  Now need to create a mesh, and assemble global matrices.
-After that, I need to add the fluxes and solve the linear system.  Also going to need to develop
-or use a ode solver.
+I believe that I have the flux figured out.  Now, I need to assemble the semi-discrete
+system and integrate in time.  Can use a simple forward Euler scheme for now.
