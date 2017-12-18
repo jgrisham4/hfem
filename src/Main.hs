@@ -3,6 +3,7 @@ import           Basis
 import           Element
 import           Mesh
 import           Node
+import           Numeric.LinearAlgebra.HMatrix as HMat
 import           ShapeFcns
 
 linBasis   = Lagrange 1
@@ -15,8 +16,9 @@ quadElem   = StructElem nodes2d 0
 someCoords = [0.0, 0.0]
 mesh2D     = generateMesh [0.0, 0.0] [1.0, 1.0] [3, 3] StructElem
 mesh1D     = generateMesh [0.0] [1.0] [6] StructElem
-meshDiscon = genDMesh (0.0::Double) (1.0::Double) 11 StructElem
+meshDiscon = genDMesh (0.0::Double) (1.0::Double) 3 StructElem
 lineElemMats = elemMatrices lineElem linShpFcn 1
+globalMats = assembleGlobalMatrices meshDiscon linShpFcn 1 1.0
 
 main = do
   print $ computeJacobian lineElem linShpFcn [0.0 :: Double]
@@ -24,4 +26,6 @@ main = do
   print $ show $ boundaryElements mesh2D !! 2
   print $ map (fst . elemMatrices lineElem linShpFcn) [1,2,3]
   writeMesh meshDiscon "mesh.dat"
-  print $ fst (assembleGlobalMatrices meshDiscon linShpFcn 1)
+  print $ HMat.toDense $ head globalMats
+  print $ HMat.toDense $ globalMats !! 1
+  print $ HMat.toDense $ last globalMats

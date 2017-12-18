@@ -1,4 +1,5 @@
-{-# LANGUAGE ConstraintKinds #-}
+{-# LANGUAGE ConstraintKinds  #-}
+{-# LANGUAGE FlexibleContexts #-}
 
 module Advection1D
 where
@@ -8,8 +9,9 @@ import           Data.List
 import qualified Element
 import           Flux
 import           Mesh
-import           Numeric.LinearAlgebra.HMatrix
-import           Quadrature                    (integrate)
+import           Numeric.LinearAlgebra
+--import           Numeric.LinearAlgebra.HMatrix
+import           Quadrature            (integrate)
 import qualified ShapeFcns
 
 -- Synonym for numeric/fractional constraints
@@ -58,16 +60,34 @@ localMatToGlobal elem elemMat = concat [[((Mesh.globalNodeNum en i, Mesh.globalN
     en = Element.getElementNumber elem
     dim = (fst . size) elemMat
 
+-- Function which does the same as the above, but with contributions due to fluxes.
+localFluxMatToGlobal :: (Element.Element e,FrElNuFi a) => e a -> Matrix a -> [((Int, Int), a)]
+localFluxMatToGlobal elem elemMat = concat [[((Mesh.globalNodeNum en i, Mesh.globalNodeNum en j - 1), atIndex elemMat (i,j) ) | i <- [0..dim-1]] | j <- [0..dim]]
+  where
+    en = Element.getElementNumber elem
+    dim = (fst . size) elemMat
+
 -- Function which assembles global stiffness and mass matrices
 -- This function takes a mesh and returns a tuple which corresponds to the
 -- global stiffness and global mass matrices, respectively.
 -- THIS ONLY WORKS WITH THE DISCONTINUOUS MESH...  IT DOES NOT SUM DUPLICATE ENTRIES.
-assembleGlobalMatrices :: (Element.Element e, ShapeFcns.ShapeFcn s,Basis.Basis b, FrElNuFi a) => Mesh e a -> s b -> Int -> ([((Int,Int),a)],[((Int,Int),a)])
-assembleGlobalMatrices grid shpFcn ngpts = (globalK, globalM)
+assembleGlobalMatrices :: (Element.Element e, ShapeFcns.ShapeFcn s,Basis.Basis b, FrElNuFi a) => Mesh e a -> s b -> Int -> a -> [[((Int,Int),a)]]
+assembleGlobalMatrices grid shpFcn ngpts advSpd = [globalK, globalM, globalF]
   where
     elems = Mesh.getMeshElements grid
+    nnodes = length (concatMap Element.getElementNodes elems)
     elemMats = map (\elem -> elemMatrices elem shpFcn ngpts) elems
     elemK = map fst elemMats
     elemM = map snd elemMats
+    elemF = elemFluxMatrix advSpd
     globalK = concat (zipWith localMatToGlobal elems elemK)
     globalM = concat (zipWith localMatToGlobal elems elemM)
+    globalF = filter (\entry -> (snd . fst) entry >= 0 && (snd . fst) entry < nnodes) (concatMap (`localFluxMatToGlobal` elemF) elems)
+
+-- This function computes the right hand side of the semi-discrete statement.
+-- udot_j = (M_ij)^(-1) ( a K_ij - F_ij ) u_j.
+-- This is what needs to be integrated point-by-point.
+udot :: (Floating a,Field a,Num (Vector a)) => Matrix a -> Matrix a -> Matrix a -> a -> Vector a -> Vector a
+udot globalM globalK globalF advSpd u = inv globalM #> ((scale advSpd globalK - globalF) #> u)
+
+
