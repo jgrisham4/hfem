@@ -87,7 +87,10 @@ assembleGlobalMatrices grid shpFcn ngpts advSpd = [globalK, globalM, globalF]
 -- This function computes the right hand side of the semi-discrete statement.
 -- udot_j = (M_ij)^(-1) ( a K_ij - F_ij ) u_j.
 -- This is what needs to be integrated point-by-point.
-udot :: (Floating a,Field a,Num (Vector a)) => Matrix a -> Matrix a -> Matrix a -> a -> Vector a -> Vector a
-udot globalM globalK globalF advSpd u = inv globalM #> ((scale advSpd globalK - globalF) #> u)
+uDot :: (Floating a,Field a,Num (Vector a)) => Matrix a -> Matrix a -> Matrix a -> a -> Vector a -> Vector a
+uDot globalM globalK globalF advSpd u = inv globalM #> ((scale advSpd globalK - globalF) #> u)
 
+-- This function advances the solution one step in time.
+advance :: (Floating a,Field a,Num (Vector a)) => Matrix a -> Matrix a -> Matrix a -> a -> Vector a -> a -> Vector a
+advance globalM globalK globalF advSpd u dt = dt * (uDot globalM globalK globalF advSpd u - u)
 

@@ -1,2 +1,2 @@
-I believe that I have the flux figured out.  Now, I need to assemble the semi-discrete
-system and integrate in time.  Can use a simple forward Euler scheme for now.
+Need to set the initial condition and integrate forward in time.
+Can use a simple forward Euler scheme for now.
