@@ -17,18 +17,19 @@ quadElem   = StructElem nodes2d 0
 someCoords = [0.0, 0.0]
 mesh2D     = generateMesh [0.0, 0.0] [1.0, 1.0] [3, 3] StructElem
 mesh1D     = generateMesh [0.0] [1.0] [6] StructElem
-meshDiscon = genDMesh (0.0::Double) (3.0::Double) 10 StructElem
+meshDiscon = genDMesh (0.0::Double) (3.0::Double) 4 StructElem
 lineElemMats = elemMatrices lineElem linShpFcn 1
 globalMats = assembleGlobalMatrices meshDiscon linShpFcn 1 1.0
 
 someFunction :: [Double] -> Double
 someFunction [x] = sin x
 
-nodalInitialConds = map (\e -> projectL2 e linShpFcn 2 someFunction) (getMeshElements meshDiscon) -- Should be [Matrix Double]
---nodeCs = map (getElementNodes) (getMeshElements meshDiscon)
---dispElemIC :: [Double] -> [Maybe (Matrix Double)] -> String
---dispElemIC nodeCoords nodeICs = [show (nodeCoords !! i) ++ " " ++ show (atIndex nodeICs (i,0)) ++ "\n" | i <- [0..1]]
---icStrings = (concat . concat) (zipWith dispElemIC nodeCs nodalInitialConds)
+nodalInitialConds = map (\e -> projectL2 e linShpFcn 2 someFunction) (getMeshElements meshDiscon) -- Should be [Maybe (Matrix Double)]
+nodeCs = map (concatMap nodeCoordinates . getElementNodes) (getMeshElements meshDiscon)
+dispElemIC :: [Double] -> Maybe (Matrix Double) -> String
+dispElemIC nodeCoords (Just nodeICs) = concat [show (nodeCoords !! i) ++ " " ++ show (atIndex nodeICs (i,0)) ++ "\n" | i <- [0..1]]
+dispElemIC _ Nothing = error "Linear solve failed."
+icStrings = concat (zipWith dispElemIC nodeCs nodalInitialConds)
 
 main = do
   print $ computeJacobian lineElem linShpFcn [0.0 :: Double]
@@ -39,4 +40,4 @@ main = do
   print $ HMat.toDense $ head globalMats
   print $ HMat.toDense $ globalMats !! 1
   print $ HMat.toDense $ last globalMats
-  --writeFile "sine_ic.dat" icStrings
+  writeFile "sine_ic.dat" icStrings

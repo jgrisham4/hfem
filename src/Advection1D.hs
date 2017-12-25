@@ -94,6 +94,15 @@ uDot globalM globalK globalF advSpd u = inv globalM #> ((scale advSpd globalK - 
 advance :: (Floating a,Field a,Num (Vector a)) => Matrix a -> Matrix a -> Matrix a -> a -> Vector a -> a -> Vector a
 advance globalM globalK globalF advSpd u dt = scale dt (uDot globalM globalK globalF advSpd u - u)
 
+-- This function applies boundary conditions to the semi-discrete system.
+applyBCs _ = []
 
---solve
+-- This function computes the solution as a function of time.
+{-
+solveAdvection numElements icFunc tf = do {
+  linBasis <- Lagrange 1;
+  shpFcn   <- TensorProduct linBasis;
+  grid     <- genDMesh 0.0 1.0 numElements StructElem;
+  }
+-}
 
