@@ -92,5 +92,8 @@ uDot globalM globalK globalF advSpd u = inv globalM #> ((scale advSpd globalK - 
 
 -- This function advances the solution one step in time.
 advance :: (Floating a,Field a,Num (Vector a)) => Matrix a -> Matrix a -> Matrix a -> a -> Vector a -> a -> Vector a
-advance globalM globalK globalF advSpd u dt = dt * (uDot globalM globalK globalF advSpd u - u)
+advance globalM globalK globalF advSpd u dt = scale dt (uDot globalM globalK globalF advSpd u - u)
+
+
+--solve
 
