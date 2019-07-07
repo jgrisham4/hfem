@@ -65,20 +65,20 @@ shpFcnTests = testGroup "Shape function tests"
   ]
 
 shpFcnBasisMapTests = testGroup "Shape function-basis mapping tests"
-  [ testCase "1D Shape fcn to basis map 0" $ assertEqual "returns [0]"     [0]     (shpFcnBasisMap 0 1)
-  , testCase "1D Shape fcn to basis map 1" $ assertEqual "returns [1]"     [1]     (shpFcnBasisMap 1 1)
-  , testCase "2D Shape fcn to basis map 0" $ assertEqual "returns [0,0]"   [0,0]   (shpFcnBasisMap 0 2)
-  , testCase "2D Shape fcn to basis map 1" $ assertEqual "returns [1,0]"   [1,0]   (shpFcnBasisMap 1 2)
-  , testCase "2D Shape fcn to basis map 2" $ assertEqual "returns [1,1]"   [1,1]   (shpFcnBasisMap 2 2)
-  , testCase "2D Shape fcn to basis map 3" $ assertEqual "returns [0,1]"   [0,1]   (shpFcnBasisMap 3 2)
-  , testCase "3D Shape fcn to basis map 0" $ assertEqual "returns [0,0,0]" [0,0,0] (shpFcnBasisMap 0 3)
-  , testCase "3D Shape fcn to basis map 1" $ assertEqual "returns [1,0,0]" [1,0,0] (shpFcnBasisMap 1 3)
-  , testCase "3D Shape fcn to basis map 2" $ assertEqual "returns [1,1,0]" [1,1,0] (shpFcnBasisMap 2 3)
-  , testCase "3D Shape fcn to basis map 3" $ assertEqual "returns [0,1,0]" [0,1,0] (shpFcnBasisMap 3 3)
-  , testCase "3D Shape fcn to basis map 4" $ assertEqual "returns [0,0,1]" [0,0,1] (shpFcnBasisMap 4 3)
-  , testCase "3D Shape fcn to basis map 5" $ assertEqual "returns [1,0,1]" [1,0,1] (shpFcnBasisMap 5 3)
-  , testCase "3D Shape fcn to basis map 6" $ assertEqual "returns [1,1,1]" [1,1,1] (shpFcnBasisMap 6 3)
-  , testCase "3D Shape fcn to basis map 7" $ assertEqual "returns [0,1,1]" [0,1,1] (shpFcnBasisMap 7 3)
+  [ testCase "1D Shape fcn to basis map 0" $ assertEqual "returns [0]"     [0]     (shpFcnBasisMap 1 1 0)
+  , testCase "1D Shape fcn to basis map 1" $ assertEqual "returns [1]"     [1]     (shpFcnBasisMap 1 1 1)
+  , testCase "2D Shape fcn to basis map 0" $ assertEqual "returns [0,0]"   [0,0]   (shpFcnBasisMap 2 1 0)
+  , testCase "2D Shape fcn to basis map 1" $ assertEqual "returns [1,0]"   [1,0]   (shpFcnBasisMap 2 1 1)
+  , testCase "2D Shape fcn to basis map 2" $ assertEqual "returns [1,1]"   [1,1]   (shpFcnBasisMap 2 1 2)
+  , testCase "2D Shape fcn to basis map 3" $ assertEqual "returns [0,1]"   [0,1]   (shpFcnBasisMap 2 1 3)
+  , testCase "3D Shape fcn to basis map 0" $ assertEqual "returns [0,0,0]" [0,0,0] (shpFcnBasisMap 3 1 0)
+  , testCase "3D Shape fcn to basis map 1" $ assertEqual "returns [1,0,0]" [1,0,0] (shpFcnBasisMap 3 1 1)
+  , testCase "3D Shape fcn to basis map 2" $ assertEqual "returns [1,1,0]" [1,1,0] (shpFcnBasisMap 3 1 2)
+  , testCase "3D Shape fcn to basis map 3" $ assertEqual "returns [0,1,0]" [0,1,0] (shpFcnBasisMap 3 1 3)
+  , testCase "3D Shape fcn to basis map 4" $ assertEqual "returns [0,0,1]" [0,0,1] (shpFcnBasisMap 3 1 4)
+  , testCase "3D Shape fcn to basis map 5" $ assertEqual "returns [1,0,1]" [1,0,1] (shpFcnBasisMap 3 1 5)
+  , testCase "3D Shape fcn to basis map 6" $ assertEqual "returns [1,1,1]" [1,1,1] (shpFcnBasisMap 3 1 6)
+  , testCase "3D Shape fcn to basis map 7" $ assertEqual "returns [0,1,1]" [0,1,1] (shpFcnBasisMap 3 1 7)
   ]
 
 -- Creating some tensoir product shape functions
@@ -90,11 +90,11 @@ tp3 = TensorProduct linLag 3
 shpFcn2d :: (Floating a) => [a] -> Int -> [Int] -> a
 shpFcn2d coords nodeNum derivs = psi linLag (head coords) (head basisNum) (head derivs) * psi linLag (coords !! 1) (basisNum !! 1) (derivs !! 1)
   where
-    basisNum = shpFcnBasisMap nodeNum 2
+    basisNum = shpFcnBasisMap 2 1 nodeNum
 shpFcn3d :: (Floating a) => [a] -> Int -> [Int] -> a
 shpFcn3d coords nodeNum derivs = psi linLag (head coords) (head basisNum) (head derivs) * psi linLag (coords !! 1) (basisNum !! 1) (derivs !! 1) * psi linLag (coords !! 2) (basisNum !! 2) (derivs !! 2)
   where
-    basisNum = shpFcnBasisMap nodeNum 3
+    basisNum = shpFcnBasisMap 3 1 nodeNum
 
 -- Some arbitrary points
 some2dPoint = [0.25, -0.3]

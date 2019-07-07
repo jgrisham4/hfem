@@ -20,16 +20,19 @@ mitigate this problem.  See the IrcLog in refs for discussion.
 -}
 
 import           Basis
+import           Control.Monad
 
--- Need to define mapping from a to i or i,j or i,j,k
+-- Need to define mapping from a to i or i,j or i,j,k (N_a -> N_ijk)
 -- ONLY WORKS FOR LINEAR BASIS
-shpFcnBasisMap :: Int -> Int -> [Int]
-shpFcnBasisMap nodeNum 1 = [concat (replicate 2 [0, 1, 1, 0]) !! nodeNum]
-shpFcnBasisMap nodeNum 2 = shpFcnBasisMap nodeNum 1 ++
-  [concat (replicate 2 [0, 0, 1, 1]) !! nodeNum]
-shpFcnBasisMap nodeNum 3 = shpFcnBasisMap nodeNum 2 ++
-  [(replicate 4 0 ++ replicate 4 1) !! nodeNum]
-shpFcnBasisMap _ _ = error "Only defined for 0<=nodeNum<=7 and up to 3D."
+shpFcnBasisMap :: Int -> Int -> Int -> [Int]
+shpFcnBasisMap 1 _ nodeNum = [concat (replicate 2 [0, 1, 1, 0]) !! nodeNum]
+shpFcnBasisMap 2 _ nodeNum = shpFcnBasisMap 1 1 nodeNum ++ [concat (replicate 2 [0, 0, 1, 1]) !! nodeNum]
+shpFcnBasisMap 3 _ nodeNum = shpFcnBasisMap 2 1 nodeNum ++ [(replicate 4 0 ++ replicate 4 1) !! nodeNum]
+shpFcnBasisMap _ _ _ = error "Only defined for 0<=nodeNum<=7 and up to 3D."
+
+-- Alternate mapping.  More generic, but incomplete.
+--shpFcnBasisMap' :: Int -> Int -> Int -> [Int]
+--shpFcnBasisMap' dim order nodeNum = map reverse (replicateM dim [0..order]) !! nodeNum
 
 -- Shape function types (dependent upon basis used)
 -- b represents the basis, and the integer represents the dimension
@@ -58,10 +61,9 @@ instance ShapeFcn TensorProduct where
   getDimension (TensorProduct _ dim) = dim
   getBasis (TensorProduct basis _) = basis
 
-  n (TensorProduct basis 1  ) coords a deriv =
-    psi basis (last coords) (last (shpFcnBasisMap a 1)) (last deriv)
+  n (TensorProduct basis 1) coords a deriv = psi basis (last coords) (last (shpFcnBasisMap 1 (basisOrder basis) a)) (last deriv)
   n (TensorProduct basis dim) coords a deriv =
-    psi basis (last coords) (last (shpFcnBasisMap a dim)) (last deriv) *
+    psi basis (last coords) (last (shpFcnBasisMap dim (basisOrder basis) a)) (last deriv) *
     n (TensorProduct basis (dim-1)) (take (dim-1) coords) a (take (dim-1) deriv)
 
   dndXi (TensorProduct basis 1) coords a = [n (TensorProduct basis 1) coords a [1]]

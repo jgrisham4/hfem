@@ -34,6 +34,10 @@ elemMatrices elem shpFcn ngpts = (stiffnessMat, massMat)
 -- Function which assembles the global stiffness and mass matrices
 assembleGlobalMatrices :: (Element.Element e, ShapeFcns.ShapeFcn s,Basis.Basis b, FrElNuFi a) => Mesh e a -> s b -> Int -> a -> [[((Int,Int),a)]]
 assembleGlobalMatrices grid shpFcn ngpts advSpd = [globalK, globalM, globalF]
+  where
+    globalK = []
+    globalM = []
+    globalF = []
 
 -- Function for applying boundary conditions
 applyBCs _ = []
