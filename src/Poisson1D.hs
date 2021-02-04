@@ -6,7 +6,7 @@ where
 
 import qualified Basis
 import           Data.List
-import qualified Element
+import           Element               as E
 import           Mesh
 import           Numeric.LinearAlgebra
 import           Quadrature            (integrate)
@@ -16,23 +16,25 @@ import qualified ShapeFcns
 type FrElNuFi a = (Fractional a,Element a,Numeric a,Field a)
 
 -- Element stiffness integrand
-stiffnessIntegrand :: (Element.Element e,ShapeFcns.ShapeFcn s,Basis.Basis b,FrElNuFi a) => e a -> s b -> [a] -> Matrix a
+stiffnessIntegrand :: (E.Element e,ShapeFcns.ShapeFcn s,Basis.Basis b,FrElNuFi a) => e a -> s b -> [a] -> Matrix a
 stiffnessIntegrand elem shpFcn xi = fromLists [[]]
 
 -- Element mass integrand
-massIntegrand :: (Element.Element e,ShapeFcns.ShapeFcn s,Basis.Basis b,FrElNuFi a) => e a -> s b -> [a] -> Matrix a
+massIntegrand :: (E.Element e,ShapeFcns.ShapeFcn s,Basis.Basis b,FrElNuFi a) => e a -> s b -> [a] -> Matrix a
 massIntegrand elem shpFcn xi = fromLists [[]]
 
 -- Element mass and stiffness matrices
 -- Must multiply by the determinant of the Jacobian here!!!
-elemMatrices :: (Element.Element e,ShapeFcns.ShapeFcn s,Basis.Basis b,FrElNuFi a) => e a -> s b -> Int -> (Matrix a,Matrix a)
+elemMatrices :: (E.Element e,ShapeFcns.ShapeFcn s,Basis.Basis b,FrElNuFi a) => e a -> s b -> Int -> (Matrix a,Matrix a)
 elemMatrices elem shpFcn ngpts = (stiffnessMat, massMat)
   where
     stiffnessMat = integrate 1 ngpts (stiffnessIntegrand elem shpFcn)
     massMat      = integrate 1 ngpts (massIntegrand elem shpFcn)
 
+assembleSubMatrix :: FrElNuFi a => 
+
 -- Function which assembles the global stiffness and mass matrices
-assembleGlobalMatrices :: (Element.Element e, ShapeFcns.ShapeFcn s,Basis.Basis b, FrElNuFi a) => Mesh e a -> s b -> Int -> a -> [[((Int,Int),a)]]
+assembleGlobalMatrices :: (E.Element e, ShapeFcns.ShapeFcn s,Basis.Basis b, FrElNuFi a) => Mesh e a -> s b -> Int -> a -> [[((Int,Int),a)]]
 assembleGlobalMatrices grid shpFcn ngpts advSpd = [globalK, globalM, globalF]
   where
     globalK = []
